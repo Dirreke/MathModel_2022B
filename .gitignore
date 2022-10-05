@@ -1,9 +1,9 @@
-example/example.aux
-example/example.log
-example/example.out
+Report/*.aux
+Report/*.log
+Report/*.out
 # example/example.pdf
-example/example.synctex.gz
-example/example.bbl
-example/example.blg
-example/example.pdf
+Report/*.synctex.gz
+Report/*.bbl
+Report/*.blg
+Report/*.pdf
 **/~$*.doc

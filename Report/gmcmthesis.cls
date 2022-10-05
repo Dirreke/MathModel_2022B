@@ -63,6 +63,8 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \RequirePackage{cprotect}
 % 设置代码环境
 \RequirePackage{listings}
+% 插入PDF
+\RequirePackage{pdfpages}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -353,33 +355,35 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 }
 \def\ge@maketitle{%
   \newpage
-  \if@gmcm@preface
-  \setcounter{page}{0}
-  \def\thepage{0}
-  \thispagestyle{empty}%
- \begin{center}
- {\includegraphics{logo}}
+  \includepdf{first_page.pdf} 
 
-  \vskip2cm
- {\zihao{2} \gmcm@ges@string@contents \par}
- \end{center}
+%   \if@gmcm@preface
+%   \setcounter{page}{0}
+%   \def\thepage{0}
+%   \thispagestyle{empty}%
+%  \begin{center}
+%  {\includegraphics{logo}}
 
- \vskip2em
+%   \vskip2cm
+%  {\zihao{2} \gmcm@ges@string@contents \par}
+%  \end{center}
 
- % \thispagestyle{gmcmheadings}
-   \renewcommand\arraystretch{1.3}
- \noindent \begin{tabularx}{\textwidth}{lX}
-  \zihao{-2}\bfseries 学\qquad 校&\zihao{-2}\bfseries\gmcm@tokens@schoolname\\
-  \hline\\[-5pt]
-  \zihao{-2}\bfseries 参赛队号&\zihao{-2}\bfseries\gmcm@tokens@baominghao\\
-  \hline\\[-15pt]
-   \multirow{3}{*}{\zihao{-2}\bfseries 队员姓名}&\zihao{-2}\bfseries	 1. \gmcm@tokens@membera\hfill\null\\
-   \cline{2-2}\\[-15pt]
-   	                           &\zihao{-2}\bfseries 2. \gmcm@tokens@memberb\hfill\null\\
-   \cline{2-2}\\[-15pt]
-		                    &\zihao{-2}\bfseries 3.  \gmcm@tokens@memberc\hfill\null\\
-   \hline
-  \end{tabularx}
+%  \vskip2em
+
+%  % \thispagestyle{gmcmheadings}
+%    \renewcommand\arraystretch{1.3}
+%  \noindent \begin{tabularx}{\textwidth}{lX}
+%   \zihao{-2}\bfseries 学\qquad 校&\zihao{-2}\bfseries\gmcm@tokens@schoolname\\
+%   \hline\\[-5pt]
+%   \zihao{-2}\bfseries 参赛队号&\zihao{-2}\bfseries\gmcm@tokens@baominghao\\
+%   \hline\\[-15pt]
+%    \multirow{3}{*}{\zihao{-2}\bfseries 队员姓名}&\zihao{-2}\bfseries	 1. \gmcm@tokens@membera\hfill\null\\
+%    \cline{2-2}\\[-15pt]
+%    	                           &\zihao{-2}\bfseries 2. \gmcm@tokens@memberb\hfill\null\\
+%    \cline{2-2}\\[-15pt]
+% 		                    &\zihao{-2}\bfseries 3.  \gmcm@tokens@memberc\hfill\null\\
+%    \hline
+%   \end{tabularx}
 	\makenametitle
 	}
 
@@ -518,4 +522,5 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 {\thecontentslabel\hskip.5em}{}{\titlerule*[0.5pc]{.}\contentspage}
 
 \pagestyle{plain}
+\pagenumbering{arabic}
 \endinput
