@@ -74,10 +74,25 @@
  R	    & 桌子直径（cm）	 &cm \\ \hline
 \end{tabular}
 
-\begin{tabular}{ccc}
-    
-    
-\end{tabular}
+
+% \begin{table}[!htbp]
+%     \centering
+%     \caption{111}\label{表}
+%     \begin{tabular}{ccc}
+%         \hline
+%         \makebox[0.25\textwidth][c]{符号}	&  \makebox[0.25\textwidth][c]{意义} &\makebox[0.25\textwidth][c]{单位}\\ \hline
+%         D    & 木条宽度（cm）   &cm\\ \hline
+%         L   & 木板长度（cm）	 &cm \\ \hline
+%         W   & 木板宽度（cm）	 &cm \\ \hline
+%         N	    & 第n根木条	   &cm \\ \hline
+%         T	    & 木条根数	   &cm \\ \hline
+%         H	    & 桌子高度（cm）	 &cm \\ \hline
+%         R	    & 桌子半径（cm）	  &cm\\ \hline
+%         R	    & 桌子直径（cm）	 &cm \\ \hline
+%     \end{tabular}
+
+% \end{table}    
+
 \section{问题qqQQAAAAaaaAAAAAAAAAAAAAAAAA}
 \section{问题分析}
 
@@ -90,17 +105,35 @@ $$\pi\times$$
 
 
 \subsection{问题二分析}
-题目要求从折叠桌的稳固性好、加工方便、用材最少三个角度，确定设计加工参数。我们可以从应力、支撑面积考虑稳固性，从开槽长度考虑加工方便，从木板长度考虑用材最少。而它们之间又是相互制约，我们需要确定最优设计加工参数，可以建立非线性规划模型，用lingo软件来求解最优设计加工参数（平板尺寸、钢筋位置、开槽长度等），这里以合力的方向（斜向上）与最长木条（桌腿）的夹角方向最小为目标函数，以木条所承受应力小于木条的许用应力、支撑面积大于桌面面积、木条的开槽长度小于木条本身长为约束条件。
-\begin{figure}[b]
-\centering
-\includegraphics[width=.7\textwidth]{1.png}
-\caption{问题三流程图}
-\end{figure}
+题目要求从折叠桌的稳固性好、加工方便、用材最少三个角度，确定设计加工参数。我们可以从应力、支撑面积考虑稳固性，从开槽长度考虑加工方便，从木板长度考虑用材最少。而它们之间又是相互制约，我们需要确定最优设计加工参数，可以建立非线性规划模型，用lingo软件来求解最优设计加工参数（平板尺寸、钢筋位置、开槽长度等），这里以合力的方向（斜向上）与最长木条（桌腿）的夹角方向最小为目标函数，以木条所承受应力小于木条的许用应力、支撑面积大于桌面面积、木条的开槽长度小于木条本身长为约束条件。图\ref{问题}发发斯蒂芬打算\ref{asdf}
+
+\begin{equation}
+    f(x) = \begin{cases}
+        \frac{1}{2} = 0.5 \\
+        \frac{1}{2} = 0.5 \\
+        \frac{2}{3}
+    \end{cases}\label{asdf}
+    \begin{matrix}
+        1 && 2 && 3 \\
+        4 && 5 && 6
+    \end{matrix}
+\end{equation}
+
 \subsection{问题三分析}
 题目要求制作软件的意思就是客户给定折叠桌高度、桌面边缘线的形状大小和桌脚边缘线的大致形状，将这些信息输入程序就得到客户想要的桌子。我们在求解最优设计加工参数时，自行给定桌面边缘线形状（椭圆、相交圆等），桌脚边缘线形状，折叠桌高度，应用第二问的非线性规划模型，用MATLAB软件绘制折叠桌截面图，得到自己设计的创意平板折叠桌。
 
-
-
+\begin{figure}[!htbp]
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{1.png}
+        \caption{问题三流程图}\label{问题}
+    \end{minipage}
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=.9\textwidth]{1.png}
+        \caption{问题三流程图}\label{wenti4}
+    \end{minipage}
+\end{figure}
 %参考文献   手工录入
 %\begin{thebibliography}{9}%宽度9
 % \bibitem{bib:one} ....
@@ -108,34 +141,20 @@ $$\pi\times$$
 %\end{thebibliography}
 
 %采用bibtex方案
+\bibliographystyle{gmcm}
+\bibliography{example.bib}
+
 \cite{mittelbach_latex_2004,wright_latex3_2009,beeton_unicode_2008,vieth_experiences_2009}
 
-\bibliographystyle{gmcm}
-\bibliography{example}
 
 
+
+\newpage
+\quad
 \newpage
 %附录
 \appendix
 %\setcounter{page}{1} %如果需要可以自行重置页码。
 \section{我的 MATLAB 源程序}
-\begin{lstlisting}[language=Matlab]%设置不同语言即可。
-kk=2;[mdd,ndd]=size(dd);
-while ~isempty(V)
-[tmpd,j]=min(W(i,V));tmpj=V(j);
-for k=2:ndd
-[tmp1,jj]=min(dd(1,k)+W(dd(2,k),V));
-tmp2=V(jj);tt(k-1,:)=[tmp1,tmp2,jj];
-end
-tmp=[tmpd,tmpj,j;tt];[tmp3,tmp4]=min(tmp(:,1));
-if tmp3==tmpd, ss(1:2,kk)=[i;tmp(tmp4,2)];
-else,tmp5=find(ss(:,tmp4)~=0);tmp6=length(tmp5);
-if dd(2,tmp4)==ss(tmp6,tmp4)
-ss(1:tmp6+1,kk)=[ss(tmp5,tmp4);tmp(tmp4,2)];
-else, ss(1:3,kk)=[i;dd(2,tmp4);tmp(tmp4,2)];
-end;end
-dd=[dd,[tmp3;tmp(tmp4,2)]];V(tmp(tmp4,3))=[];
-[mdd,ndd]=size(dd);kk=kk+1;
-end; S=ss; D=dd(1,:);
- \end{lstlisting}
+\lstinputlisting[language=matlab]{../code/test.m}
 \end{document} 

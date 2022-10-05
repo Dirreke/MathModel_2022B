@@ -1,0 +1,9 @@
+example/example.aux
+example/example.log
+example/example.out
+# example/example.pdf
+example/example.synctex.gz
+example/example.bbl
+example/example.blg
+example/example.pdf
+**/~$*.doc

@@ -388,7 +388,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \setcounter{page}{1}
 \begin{center}
 %{\includegraphics[width=4cm]{logo}}
-{\zihao{2} \gmcm@ges@string@contents \par}
+{\zihao{-2} \gmcm@ges@string@contents \par}
 \end{center}
 
 \vskip0.6cm%
@@ -439,7 +439,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 		\section*{\gmcm@cap@abstractname}%
 	\else
 	 \begin{center}%
-	{\zihao{3}\lishu\gmcm@cap@abstractname\vspace{\z@}}%
+	{\zihao{-2}\lishu\gmcm@cap@abstractname\vspace{\z@}}%
 	 \end{center}%
  	 \quotation
 	\fi}
@@ -500,7 +500,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 
  %%%常量
 
-%\newcommand\gmcm@ges@string@contents{“华为杯”第十五届全国研究生\par 数学建模竞赛}
+% \newcommand\gmcm@ges@string@contents{中国光谷·“华为杯”第十九届中国研究生\par 数学建模竞赛}
 \newcommand\gmcm@ges@string@contents{\includegraphics{title}}
 
 
