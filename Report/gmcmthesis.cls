@@ -65,6 +65,11 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \RequirePackage{listings}
 % 插入PDF
 \RequirePackage{pdfpages}
+\RequirePackage{silence}
+%% 忽略警告
+\WarningFilter{hyperref}{Token not allowed in a PDF string}
+\WarningFilter{natbib}{Citation}
+\WarningFilter{xeCJK}{Redefining}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -304,11 +309,14 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 }
 
 % 超链接
+% \pdfstringdefDisableCommands{
+%   \def\corref#1{<#1>}
+% }
 % \AtBeginDocument{%
 	 \hypersetup{%
-		% % unicode=false, % hyperref 和 xetex 同时使用时不能开启 Unicode 选项.
-		 hyperfootnotes=true,
-		 hyperindex=true,
+		%  unicode=false, % hyperref 和 xetex 同时使用时不能开启 Unicode 选项.
+		%  hyperfootnotes=true,
+		%  hyperindex=true,
 		 colorlinks=true,
 		 bookmarksnumbered=true,
 		 bookmarksopen=true,
@@ -524,3 +532,4 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \pagestyle{plain}
 \pagenumbering{arabic}
 \endinput
+
