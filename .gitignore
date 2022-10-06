@@ -7,3 +7,4 @@ Report/*.bbl
 Report/*.blg
 Report/*.pdf
 **/~$*.doc
+**/*.asv
