@@ -11,10 +11,10 @@ data(:,4) = data_ori{5};    % width
 data(:,5) = data(:,3) .* data(:,4); % area
 
 % change order of length and width£¬let length > width
-index = data(:,3) < data(:,4);
-tmp = data(index, 3);
-data(index, 3) = data(index, 4);
-data(index, 4) = tmp;
+% index = data(:,3) < data(:,4);
+% tmp = data(index, 3);
+% data(index, 3) = data(index, 4);
+% data(index, 4) = tmp;
 fclose(f);
 end
 

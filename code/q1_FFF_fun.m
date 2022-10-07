@@ -1,21 +1,24 @@
-data = data_pre_fun("../data/dataA/dataA1.csv");
-data(:,6) = 1;
-data2 = data;
+function bins = q1_FFF_fun(data_ori,width,height)
+
+% data_ori = data_pre_fun("../data/dataA/dataA1.csv");
+% % height = 1220;
+% % width = 2440;
+% 
+% height = 2440;
+% width = 1220;
+
+
+data_ori(:,6) = 1;
+data2 = data_ori;
 tmp = data2(:,3);
 data2(:,3) = data2(:,4);
 data2(:,4) = tmp;
 data2(:,6) = -1;
-data = [data;data2];
+data = [data_ori;data2];
 [~,index] = sort(data(:,3),'descend');
 data = data(index,:);
-data_clone = data;
+% data_clone = data;
 data(:,7) = ones(size(data,1),1);
-
-% height = 1220;
-% width = 2440;
-
-height = 2440;
-width = 1220;
 
 bin.unused_height = height;
 bin.width = width;
@@ -71,17 +74,20 @@ while ~isempty(data)
 end
 bins = [bins,bin];
 
-248743608 / 1220/2440/size(bins,2)
+rate = 248743608 / 1220/2440/size(bins,2);
+fprintf("FFF rate %.2f \n",rate*100);
 
-%% check
-num = 0;
-for k = 1:length(bins)
-    for kk = 1:length(bins(k).strips)
-        for kkk = 1: length(bins(k).strips(kk).stacks)
-            num = num + size(bins(k).strips(kk).stacks(kkk).items,1);
-        end
-    end
 end
+
+% %% check
+% num = 0;
+% for k = 1:length(bins)
+%     for kk = 1:length(bins(k).strips)
+%         for kkk = 1: length(bins(k).strips(kk).stacks)
+%             num = num + size(bins(k).strips(kk).stacks(kkk).items,1);
+%         end
+%     end
+% end
 
 
 
