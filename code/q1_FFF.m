@@ -3,7 +3,7 @@ data(:,6) = 1;
 data2 = data;
 tmp = data2(:,3);
 data2(:,3) = data2(:,4);
-data2(:,4) = data2(:,3);
+data2(:,4) = tmp;
 data2(:,6) = -1;
 data = [data;data2];
 [~,index] = sort(data(:,3),'descend');
@@ -11,8 +11,11 @@ data = data(index,:);
 data_clone = data;
 data(:,7) = ones(size(data,1),1);
 
-height = 1220;
-width = 2440;
+% height = 1220;
+% width = 2440;
+
+height = 2440;
+width = 1220;
 
 bin.unused_height = height;
 bin.width = width;
@@ -65,12 +68,31 @@ while ~isempty(data)
         bin.strips = [bin.strips,strip];
         bin.unused_height = bin.unused_height - strip.height;
     end
-%     data(k,3)
-%     index = find(data(:,3) == max(data(data(:,3) < unused_height,3)));
-%     height = data(index(1),3);
-    
+end
+bins = [bins,bin];
+
+248743608 / 1220/2440/size(bins,2)
+
+%% check
+num = 0;
+for k = 1:length(bins)
+    for kk = 1:length(bins(k).strips)
+        for kkk = 1: length(bins(k).strips(kk).stacks)
+            num = num + size(bins(k).strips(kk).stacks(kkk).items,1);
+        end
+    end
 end
 
-248743608 / 1220/2440/51
+
+
+
+
+
+
+
+
+
+
+
 
 
