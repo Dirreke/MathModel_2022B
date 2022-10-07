@@ -18,7 +18,7 @@ data = [data_ori;data2];
 [~,index] = sort(data(:,3),'descend');
 data = data(index,:);
 % data_clone = data;
-data(:,7) = ones(size(data,1),1);
+% data_flags = ones(size(data,1),1);
 
 bin.unused_height = height;
 bin.width = width;
@@ -29,8 +29,9 @@ while ~isempty(data)
     strip.height = 0;
     strip.unused_width = width;
     strip.stacks = [];
+    data_flags = false(size(data,1),1);
     for k = 1:size(data,1)
-        if data(k,7) == 0
+        if data_flags(k) == 1
             continue
         end
         if isempty(strip.stacks) &&  data(k,3) <= bin.unused_height
@@ -42,26 +43,26 @@ while ~isempty(data)
             strip.unused_width = strip.unused_width - stack.width;
             strip.stacks = [strip.stacks,stack];
             % remove item(k)
-            data(data(:,1) == data(k,1),7) = 0;
+            data_flags(data(:,1) == data(k,1)) = 1;
         elseif ~isempty(strip.stacks) && data(k,4) <= strip.unused_width && data(k,3) <= strip.height
             strip.unused_width = strip.unused_width - data(k,4);
             stack.width = data(k,4);
             stack.unused_height = strip.height-data(k,3);
             stack.items = data(k,:);
             % remove item(k)
-            data(data(:,1) == data(k,1),7) = 0;
+            data_flags(data(:,1) == data(k,1)) = 1;
             for kk = k+1:size(data,1)
                 if data(kk,4) == stack.width && data(kk,3) <= stack.unused_height
                     stack.unused_height = strip.height-data(kk,3);
                     stack.items = [stack.items;data(kk,:)];
                     % remove item(k)
-                    data(data(:,1) == data(kk,1),7) = 0;
+                    data_flags(data(:,1) == data(kk,1)) = 1;
                 end
             end
             strip.stacks = [strip.stacks,stack];
         end
     end
-    data(data(:,7)==0,:) = [];
+    data(data_flags,:) = [];
     if isempty(strip.stacks)
         bins = [bins,bin];
         bin.unused_height = height;
