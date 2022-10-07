@@ -15,11 +15,11 @@ for k = 1:n
         index_1(k,kk) = 1;
     end
 end
-index_1 = reshape(index_1,1,n^2);
+index_1 = reshape(index_1',1,n^2);
 index_1 = logical([index_1,index_1, index_1]);
 
 obj = zeros(1,3*n^2);
-obj(2*n^2+1:n:end);
+obj(2*n^2+1:n+1:end) = 1;
 obj(index_1)=[];
 obj = sparse(obj);
 
