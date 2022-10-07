@@ -10,8 +10,10 @@ for k = 1:length(file)
 
     bins_2 = q1_FFF_fun(data_ori,width,height);
 end
-% data_ori = data_pre_fun("../data/dataA/dataA1.csv",1);
-
+data_ori = data_pre_fun(file(1),1);
+height = 2440;
+width = 1220;
+bins_2 = q1_FFF_fun(data_ori,width,height);
 
 %% ²»Ðý×ª°æ±¾ + MILP 
 bins_2 = q1_FFF_fun(data_ori,width,height,0);
