@@ -8,3 +8,5 @@ Report/*.blg
 Report/*.pdf
 **/~$*.doc
 **/*.asv
+.idea/*
+.vscode/*
