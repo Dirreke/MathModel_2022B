@@ -13,66 +13,71 @@
 
  %填写摘要
 \begin{abstract}
-本文对高压油管、高压油泵和喷嘴口建立\textbf{微分模型}，通过数值解法得到高压油管的油压变化，并通过设定优化目标，建立规划问题。使用\textbf{优先搜索、控制变量、稀疏遍历}等算法提高求解问题的速度与精度。同时，也对模型中主要参数进行了灵敏度分析，将主要参数设置到合适的数值。
+本文对高压油管、高压油泵和喷啧啧啧嘴口建立\textbf{微分模型}，通过数值解法得到高压油管的油压变化，并通过设定优化目标，建立规划问题。使用\textbf{优先搜索、控制变量、稀疏遍历}等算法提高求解问题的速度与精度。同时，也对模型中主要参数进行了灵敏度分析，将主要参数设置到合适的数值。
 \keywords{微分方程;Runge-Kutta; 非线性规划; 优先搜索; 稀疏遍历; 迭代逼近}
 
 \end{abstract}
 
-\pagestyle{plain}
+%\pagestyle{plain}
 
 %目录 不推荐加
 %\tableofcontents
 \section{问题重述}
-
 \subsection{问题背景}
 
 方形件产品（也称板式类产品）是一类以板材为主要原片、经平面加工后组合装配形成的产品，如3C(计算、通讯、消费电子)、板式家具、玻璃、钣金件等。因其“多品种小批量”的个性化定制生产模式，企业通常需要进行订单组批和排样优化，降低原材料消耗，保证生产效率。
 
-
 \textbf{订单组批}是指针对数量庞大的不同订单，将其组成若干批次,实现批量化生产。批次的定义为完成若干订单全部任务且不含任何不完整订单任务的订单集合。订单组批时，通常会将具有相同材质、交货期相近、工艺相似的订单安排在同一个生产批次。
-
 
 \textbf{排样优化}是指合理规划方形件在板材原片上的布局，最大化材料利用率，简化切割过程。切割工艺根据是否任何一次直线切割都能保证板材可分离可分为齐头切和非齐头切，齐头切又可根据是否在有限切割阶段数内切割出准确尺寸的方形件分为精确方式和非精确方式。以3个阶段的切割方式为例，第1阶段切割生成模块可称为stripe（条带），第2阶段切割生成模块可称为stack（栈），第3阶段生成模块可称为item（条带）。
 
-
 \quad
-
-
 \subsection{问题提出}
 基于上述问题背景，根据题目提供的输入参数（包括单个批次产品项总数上限和面积总和上限、原片长度和宽度）和产品项数据集（包括产品项材质、数量、长度、宽度和订单号），完成下述两个问题：
 
 
 \textbf{子问题1}，将数据集A中的一个数据表中的所有订单作为一个订单组批，采用齐头切的三阶段精确排样方式，给出每个订单组批板材用量最少的排样方案，以坐标系和效果图的形式进行描述，并计算板材利用率对方案进行评价。
 
-
 \textbf{子问题2}，对于数据集中的每个数据表，考虑同一订单产品项全部在同一批次、同一材质产品项方可使用同一板材原片、每个批次产品项总数和面积总和均不超过上线的约束，采用齐头切的三阶段精确排样方式，分别给出板材用量最少的订单组批方案及相应各批次排样方案，以坐标系和效果图的形式进行描述，并计算板材利用率对方案进行评价。
 
 \newpage
-
 \section{模型假设}
 
 
 （1） 只考虑齐头切的切割方式（直线切割、切割方向垂直于板材一条边，并保证每次直线切割板材可分离成两块）；
 
-
 （2） 切割阶段数不超过3，同一个阶段切割方向相同；
-
 
 （3） 排样方式为精确排样；
 
-
 （4） 假定板材原片仅有一种规格且数量充足；
-
 
 （5） 排样方案不用考虑锯缝宽度（即切割的缝隙宽度）影响；
 
 （6）所有订单的交货期均相同。
 
-
-\section{符号说明}
-
 \quad
-
+\section{符号说明}
+{\centering
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\begin{tabular}{cccc}
+ \hline
+  \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ \hline
+ 1 & $Item_{i}$     & 第$i$个产品项	  \\ 
+ 2 & $Stack_{j}$    & 第$j$个栈       \\ 
+ 3 & $Stripe_{k}$   & 第$k$个条带	  \\ 
+ 4 & $Bin_{l}$      & 第$l$块板材原片  \\ 
+ 5 & $n$            & 产品项总个数      \\ 
+ 6 & $h_{i}$      & 第$i$个产品项的长度（mm） \\ 
+ 7 & $w_{i}$      & 第$i$个产品项的宽度	(mm) \\ 
+ 8 & $H$          & 板材原片的长度（mm）\\ 
+ 9 & $W$          & 板材原片的宽度（mm） \\ 
+ 10 & $a_{j,i}$    & \tabincell{c}{标志第$j$个栈是否包含第$i$个产品项的二进制变量\\（包含值为1，不包含值为0）}  	&\quad   \\  
+ 11 & $b_{k,j}$    & \tabincell{c}{标志第$k$个条带是否包含第$j$个栈的二进制变量\\（包含值为1，不包含值为0）}  	&\quad   \\  
+ 12 & $r_{l,k}$    & \tabincell{c}{标志第$l$块板材原片是否包含第$k$个产品项的二进制变量\\（包含值为1，不包含值为0）}  	&\quad   \\  \hline
+\end{tabular}
+}
+\newpage
 
 信号干扰下的超宽带（UWB）精确定位问题，是指考虑\textbf{信号干扰}的前提下，利用基于飞行时间（Time of Flignt，TOF）测距原理的UWB定位技术，采集锚点（anchor）与靶点（Tag）之间的距离，确定Tag的精确定位（3维坐标）。
 
@@ -110,38 +115,19 @@
 \end{itemize}
 
 \section{符号说明}
-
-\begin{tabular}{ccc}
+\begin{tabular}{cccc}
  \hline
- \makebox[0.25\textwidth][c]{符号}	&  \makebox[0.25\textwidth][c]{意义} &\makebox[0.25\textwidth][c]{单位}\\ \hline
- D    & 木条宽度（cm）   &cm\\ \hline
- L   & 木板长度（cm）	 &cm \\ \hline
- W   & 木板宽度（cm）	 &cm \\ \hline
- N	    & 第n根木条	   &cm \\ \hline
- T	    & 木条根数	   &cm \\ \hline
- H	    & 桌子高度（cm）	 &cm \\ \hline
- R	    & 桌子半径（cm）	  &cm\\ \hline
- R	    & 桌子直径（cm）	 &cm \\ \hline
+  \makebox[0.12\textwidth][c]{序号}  &  \makebox[0.12\textwidth][c]{符号}	&  \makebox[0.5\textwidth][c]{意义} &\makebox[0.2\textwidth][c]{单位}\\ \hline
+ 1 & D    & 木条宽度（cm）   &cm\\ 
+ 1 & L   & 木板长度（cm）	 &cm \\ 
+ 1 & W   & 木板宽度（cm）	 &cm \\ 
+ 1 & N	    & 第n根木条	   &cm \\ 
+ 1 & T	    & 木条根数	   &cm \\ 
+ 1 & H	    & 桌子高度（cm）	 &cm \\ 
+ 1 & R	    & 桌子半径（cm）	  &cm\\ \hline
+ 1 & R	    & 桌子直径（cm）	 &cm \\ \hline
 \end{tabular}
 
-
-% \begin{table}[!htbp]
-%     \centering
-%     \caption{111}\label{表}
-%     \begin{tabular}{ccc}
-%         \hline
-%         \makebox[0.25\textwidth][c]{符号}	&  \makebox[0.25\textwidth][c]{意义} &\makebox[0.25\textwidth][c]{单位}\\ \hline
-%         D    & 木条宽度（cm）   &cm\\ \hline
-%         L   & 木板长度（cm）	 &cm \\ \hline
-%         W   & 木板宽度（cm）	 &cm \\ \hline
-%         N	    & 第n根木条	   &cm \\ \hline
-%         T	    & 木条根数	   &cm \\ \hline
-%         H	    & 桌子高度（cm）	 &cm \\ \hline
-%         R	    & 桌子半径（cm）	  &cm\\ \hline
-%         R	    & 桌子直径（cm）	 &cm \\ \hline
-%     \end{tabular}
-
-% \end{table}    
 
 \section{问题qqQQAAAAaaaAAAAAAAAAAAAAAAAA}
 \section{问题分析}
