@@ -1,7 +1,9 @@
-W = 2440;
-H = 1220;
-data = data_pre_fun("../data/dataA/dataA1.csv");
-% data(3:end,:)=[];
+function model=q1_create_restricted_model_fun(W,H,data)
+% W = 1220;
+% H = 2440;
+% data = data_pre_fun("../data/dataA/dataA1.csv");
+% data(71:end,:)=[];
+
 %% MILP
 n = size(data,1);
 alpha = zeros(n);
@@ -77,7 +79,7 @@ A_8 = zeros(n-1,3*n^2);
 b_8 = zeros(n-1,1);
 for k = 1:n-1     % l
     A_8(k,2*n^2+n*k-n+k:2*n^2+n*k) = data(k:n,3)';
-    A_8(k,2*n^2+n*k-n+k) = -H;
+    A_8(k,2*n^2+n*k-n+k) =A_8(k,2*n^2+n*k-n+k) -H;
 end
 A_8 = sparse(A_8);
 b_8 = sparse(b_8);
@@ -107,7 +109,16 @@ obj(2*n^2+1:n+1:end) = 1;
 obj(index_1 | index_3)=[];
 obj = sparse(obj);
 
-test = intlinprog(obj,intcon,A,b,Aeq,beq,lb,ub);
+model.obj = obj;
+model.A = A;
+model.b = b;
+model.Aeq = Aeq;
+model.beq = beq;
+model.lb = lb;
+model.ub = ub;
+end
+% options = optimoptions('intlinprog','MaxTime',400,'RootLPAlgorithm','dual-simplex','Display','iter','CutGeneration','advanced');
+% test = intlinprog(obj,intcon,A,b,Aeq,beq,lb,ub,options);
 % function cost = q1_cost(x)
 %     n = round(length(x)/3);
 %     % alpha = x(1:n);
