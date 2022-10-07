@@ -17,18 +17,45 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [gBest,gBestScore,ConvergenceCurve]=BPSO(noP,Max_iteration,BPSO_num,CostFunction,noV)
+function [gBest,gBestScore,ConvergenceCurve]=BPSO(noP,Max_iteration,BPSO_num,CostFunction,noV,x0)
 
 %Initial Parameters for PSO
 w=2;              %Inirtia weight
-wMax=0.6;         %Max inirtia weight
+wMax=0.9;         %Max inirtia weight
 wMin=0.4;         %Min inirtia weight
-c1=20;
-c2=20;
-Vmax=60;
+c1=2;
+c2=2;
+Vmax=20;
 
 Velocity=zeros(noP,noV);%Velocity vector
-Position=zeros(noP,noV);%Position vector
+if nargin < 6
+    Position=zeros(noP,noV);%Position vector
+    %Initialization
+    for i=1:size(Position,1) % For each particle
+        for j=1:size(Position,2) % For each variable
+            if rand<=0.5
+                Position(i,j)=0;
+            else
+                Position(i,j)=1;
+            end
+        end
+    end
+    for i=1:noP
+        pBestScore(i)=inf;
+    end
+else
+    [tmp_x,tmp_y] = size(x0);
+    if tmp_x ~= noP || tmp_y ~= noV
+        warning("1");
+    else
+        Position = x0;
+    end
+    %Initialization
+    for i=1:noP
+        pBestScore(i)=CostFunction(Position(i,:),0);
+    end
+
+end
 
 %////////Cognitive component///////// 
 pBestScore=zeros(noP);
@@ -42,19 +69,7 @@ gBest=zeros(1,noV);
 
 ConvergenceCurve=zeros(1,Max_iteration); %Convergence vector
 
-%Initialization
-for i=1:size(Position,1) % For each particle
-    for j=1:size(Position,2) % For each variable
-        if rand<=0.5
-            Position(i,j)=0;
-        else
-            Position(i,j)=1;
-        end
-    end
-end
-for i=1:noP
-    pBestScore(i)=inf;
-end
+
 
 for l=1:Max_iteration
     l

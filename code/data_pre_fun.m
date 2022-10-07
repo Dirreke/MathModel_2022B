@@ -1,6 +1,6 @@
 function data = data_pre_fun(file,is_sorted)
 if nargin == 1
-    is_sorted = false
+    is_sorted = false;
 end
 % file = "../data/dataA/dataA1.csv";
 f = fopen(file);
