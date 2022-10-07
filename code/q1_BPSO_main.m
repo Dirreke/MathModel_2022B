@@ -1,6 +1,6 @@
 width = 1220;
 height = 2440;
-data_ori = data_pre_fun("../data/dataA/dataA1.csv");
+data_ori = data_pre_fun("../data/dataA/dataA1.csv",1);
 % data(71:end,:)=[];
 model = q1_create_restricted_model_fun(width,height,data_ori);
 CostFunction=@(x,k)q1_BPSO_cost_fun(model,x,k);

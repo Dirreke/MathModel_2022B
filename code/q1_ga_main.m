@@ -1,7 +1,7 @@
 
 %% data
 file = ["../data/dataA/dataA1.csv","../data/dataA/dataA2.csv","../data/dataA/dataA3.csv","../data/dataA/dataA4.csv"];
-data_ori = data_pre_fun(file(1));
+data_ori = data_pre_fun(file(1),1);
 height = 2440;
 width = 1220;
 %% model
@@ -27,7 +27,7 @@ num = length(model.obj);
 
 %% 定义遗传算法参数  
 NIND=100;         %个体数目  
-MAXGEN=100;      %最大遗传代数     
+MAXGEN=1000;      %最大遗传代数     
 GGAP=0.90;      %代沟  
 px=0.1;         %交叉概率  
 pm=0.007;        %变异概率  
