@@ -11,14 +11,14 @@ data(:,3) = data_ori{7};    % 产品x方向长度
 data(:,4) = data_ori{8};    % 产品y方向长度
 
 i=1;
-while i<=3
-    picture='Batch'+number(i,1)+'-'+'Board'+number(i,3)+'-'+'Material'+number(i,2)
+while i<=5  %产品总个数
+    picture='Batch'+number(i,1)+'-'+'Board'+number(i,2)+'-'+'Material'+material(i,1)
     figure('NumberTitle', 'off','Name',picture);
    
     hold on;
     rectangle('Position',[0,0,2440,1220],'LineWidth',0.5,'EdgeColor','K','LineStyle','-');
     plot(data(i,1),data(i,2),'K-o','MarkerFaceColor','K','MarkerSize',3);
-    text(data(i,1)+30,data(i,2)+30,'ID'+number(i,3)+'('+num2str(data(i,1))+','+num2str(data(i,2))+')','fontsize',9,'FontName', 'Times New Roman');
+    text(data(i,1)+30,data(i,2)+30,'Item'+number(i,3)+'-'+'('+num2str(data(i,1))+','+num2str(data(i,2))+')'+'-'+num2str(data(i,3))+'mm*'+num2str(data(i,4))+'mm','fontsize',9,'FontName', 'Times New Roman');
     rectangle('Position',[data(i,1),data(i,2),data(i,3),data(i,4)],'LineWidth',0.5,'EdgeColor','r','LineStyle','--');
     i=i+1;
     axis([0 2440 0 1220]);
@@ -29,12 +29,14 @@ while i<=3
     ylabel('1220mm','fontsize',9,'FontName', 'Times New Roman');
     title(picture);
    
-    if i<=3
-    while  strcmpi(number(i-1,2), number(i,2))
+    while i<=5  %产品总个数
+    if strcmpi(number(i-1,2), number(i,2))
          plot(data(i,1),data(i,2),'K-o','MarkerFaceColor','K','MarkerSize',3);
-         text(data(i,1)+30,data(i,2)+30,'ID'+number(i,3)+'('+num2str(data(i,1))+','+num2str(data(i,2))+')','fontsize',9,'FontName', 'Times New Roman' );
+         text(data(i,1)+30,data(i,2)+30,'Item'+number(i,3)+'-'+'('+num2str(data(i,1))+','+num2str(data(i,2))+')'+'-'+num2str(data(i,3))+'mm*'+num2str(data(i,4))+'mm','fontsize',9,'FontName', 'Times New Roman');
          rectangle('Position',[data(i,1),data(i,2),data(i,3),data(i,4)],'LineWidth',0.5,'EdgeColor','r','LineStyle','--');
          i=i+1;
+    else
+         break;
     end
     end
     fig_width = 28.8;%cm
