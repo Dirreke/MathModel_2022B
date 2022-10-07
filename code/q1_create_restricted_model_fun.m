@@ -84,29 +84,30 @@ end
 A_8 = sparse(A_8);
 b_8 = sparse(b_8);
 
+index_delete = index_1 | index_3;
 
 Aeq = [Aeq_2;Aeq_4;Aeq_7];
 beq = [beq_2;beq_4;beq_7];
 clear Aeq_2 Aeq_4 Aeq_7
 clear beq_2 beq_4 beq_7
-Aeq(:,index_1 | index_3) = [];
+Aeq(:,index_delete) = [];
 
 A = [A_5;A_6;A_8];
 b = [b_5;b_6;b_8];
 clear A_5 A_6 A_8
 clear b_5 b_6 b_8
-A(:,index_1 | index_3)=[];
+A(:,index_delete)=[];
 
 
 lb = sparse(zeros(1,3*n^2));
 ub = sparse(ones(1,3*n^2));
 intcon = 1:3*n^2-sum(index_1)-sum(index_3);
-lb(index_1 | index_3)=[];
-ub(index_1 | index_3)=[];
+lb(index_delete)=[];
+ub(index_delete)=[];
 
 obj = zeros(1,3*n^2);
 obj(2*n^2+1:n+1:end) = 1;
-obj(index_1 | index_3)=[];
+obj(index_delete)=[];
 obj = sparse(obj);
 
 model.obj = obj;
@@ -116,6 +117,7 @@ model.Aeq = Aeq;
 model.beq = beq;
 model.lb = lb;
 model.ub = ub;
+model.index_delete = index_delete;
 end
 % options = optimoptions('intlinprog','MaxTime',400,'RootLPAlgorithm','dual-simplex','Display','iter','CutGeneration','advanced');
 % test = intlinprog(obj,intcon,A,b,Aeq,beq,lb,ub,options);
