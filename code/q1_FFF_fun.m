@@ -1,6 +1,9 @@
-function bins = q1_FFF_fun(data_ori,width,height,consider_rotate)
-if nargin == 3
+function bins = q1_FFF_fun(data_ori,width,height,consider_rotate,create_random)
+if nargin < 4
     consider_rotate = 1;
+end
+if nargin < 5
+    create_random = 0;
 end
 % data_ori = data_pre_fun("../data/dataA/dataA1.csv");
 % % height = 1220;
@@ -20,7 +23,11 @@ else
     data2 = [];
 end
 data = [data_ori;data2];
-[~,index] = sort(data(:,3),'descend');
+if ~create_random
+    [~,index] = sort(data(:,3),'descend');
+else
+    index = randperm(size(data,1));
+end
 data = data(index,:);
 % data_clone = data;
 % data_flags = ones(size(data,1),1);
