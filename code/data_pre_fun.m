@@ -1,4 +1,7 @@
-function data = data_pre_fun(file)
+function data = data_pre_fun(file,is_sorted)
+if nargin == 1
+    is_sorted = false
+end
 % file = "../data/dataA/dataA1.csv";
 f = fopen(file);
 fgetl(f);
@@ -14,6 +17,11 @@ data(:,5) = data(:,3) .* data(:,4); % area
 data(:,6) = ones(size(data,1),1); % 1表示正向
 data(:,7) = data_ori{1};    % id
 data(:,8) = str2num(char(replace(data_ori{6},'order',''))); % order
+if is_sorted
+    [~,index] = sort(data(:,3),'descend');
+    data = data(index,:);
+    data(:,1) = 1:num;
+end
 
 % change order of length and width，let length > width
 % index = data(:,3) < data(:,4);

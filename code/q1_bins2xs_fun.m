@@ -1,4 +1,4 @@
-function xs = q1_bins2xs_fun(bins)
+function [xs,bins] = q1_bins2xs_fun(bins)
 % data_ori = data_pre_fun("../data/dataA/dataA1.csv");
 % height = 2440;
 % width = 1220;
@@ -52,9 +52,6 @@ gamma = reshape(gamma',1,num^2);
 xs.alpha = alpha;
 xs.beta = beta;
 xs.gamma = gamma;
-
-
-
 
 
 
