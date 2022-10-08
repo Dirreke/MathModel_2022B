@@ -11,7 +11,11 @@ end
 % 
 % height = 2440;
 % width = 1220;
-
+if isempty(data_ori)
+    bins = [];
+    rate = [];
+    return
+end
 %% data pre
 if consider_rotate
     data2 = data_ori;

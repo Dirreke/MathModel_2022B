@@ -22,7 +22,7 @@ for k = 1:material_num
     tmp_data = data_ori(index,:);
     [tmp_bins,rate] = q1_FFF_fun(tmp_data,width,height);
     tmp_num_bins = length(tmp_bins);
-    material_data(k,4) = num_bins;
+    material_data(k,4) = tmp_num_bins;
     material_data(k,5) = rate;
 end
 
