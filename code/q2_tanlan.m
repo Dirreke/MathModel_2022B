@@ -3,10 +3,10 @@
 file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
 width = 1220;
 height = 2440;
-[data_ori, material_index] = data_pre_fun(file(2));
+[data_ori, material_index] = data_pre_fun(file(3));
 max_item_number = 1000;
 max_item_area = 250e6;
-
+data = data_ori;
 
 %% 
 is_merge = true;
@@ -64,8 +64,15 @@ while is_merge
     end
     
 end
-    
-                
+
+orders_unique = unique(data_ori(:, 8));
+orders_BP_infos = cell(size(orders_unique,1),1);
+batches_BP_infos = zeros(size(orders_unique,1),2);
+for k = 1:size(orders_unique,1)
+    [orders_BP_infos{k}, num, ratio] = q3_FFF_fun(data_ori,width,height,orders_unique(k)); % materials num_plates ratio_all ratio_last
+    batches_BP_infos(k,:) = [num,ratio];
+end
+
             
     
 % num_bins_calculate = @(x_alpha,x_material)q2_FFF_fun(data_ori,width,height,x_alpha,x_material);
