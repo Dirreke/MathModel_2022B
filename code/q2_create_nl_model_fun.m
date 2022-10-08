@@ -1,9 +1,9 @@
 function model = q2_create_nl_model_fun(W,H,data)
 
-% W = 1220;
-% H = 2440;
-% file_path = "../data/dataB/dataB1.csv";
-% data = data_pre_fun(file_path);
+W = 1220;
+H = 2440;
+file_path = "../data/dataB/dataB1.csv";
+data = data_pre_fun(file_path);
 
 max_item_num = 1000;            %单个批次产品项（item）总数上限
 max_item_area = 250*1000*1000;  %单个批次产品项（item）的面积总和上限
@@ -28,14 +28,11 @@ index_1 = reshape(index_1',1,n^2);
 index_1 = [index_1, index_1];
 
 
-Aeq_1 = zeros(n,2*n^2);
-beq_1 = zeros(n,1);
-for k = 1:n^2    
-    Aeq_1(k,k:n^2:n^2+k) = 1;
-    beq_1(k,:) = 1;
-end
-%Aeq_1 = sparse(Aeq_1);
-%beq_1 = sparse(beq_1);
+% Aeq_1 = sparse(n^2,2*n^2);
+beq_1 = ones(n^2,1);
+tmp = speye(n^2);
+Aeq_1 = [tmp,tmp];
+
 
 Aeq_2 = zeros(n,2*n^2);
 beq_2 = zeros(n,1);
