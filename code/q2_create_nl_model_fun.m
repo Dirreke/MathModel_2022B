@@ -100,16 +100,16 @@ model.index_delete = index_delete;
 end
 
 function c = nlcon(x)
-    alpha = x(:,1:end/2);
-    beta = x(:,end/2+1:end);
-    c = sum(alpha.*beta, 2);
+    alpha = x(1:end/2);
+    beta = x(end/2+1:end);
+    c = sum(alpha.*beta);
 end
 
 function cost = objV(data,W,H,x,index_delete)
-x = x(:,1:end/2);
-index_delete = index_delete(:,1:end/2);
+x = x(1:end/2);
+index_delete = index_delete(1:end/2);
 
-n = size(index_delete,2);
+n = length(index_delete);
 alpha = false(1,n);
 alpha(~index_delete) = x;
 alpha = reshape(alpha,sqrt(n),sqrt(n));
