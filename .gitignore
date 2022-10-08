@@ -10,3 +10,5 @@ Report/*.pdf
 **/*.asv
 .idea/*
 .vscode/*
+Report/figures/Batch*
+data/resultA/*
