@@ -1,9 +1,9 @@
 function model = q2_create_nl_model_fun(W,H,data)
 
-W = 1220;
-H = 2440;
-file_path = "../data/dataB/dataB1.csv";
-data = data_pre_fun(file_path);
+% W = 1220;
+% H = 2440;
+% file_path = "../data/dataB/dataB1.csv";
+% data = data_pre_fun(file_path);
 
 max_item_num = 1000;            %单个批次产品项（item）总数上限
 max_item_area = 250*1000*1000;  %单个批次产品项（item）的面积总和上限
@@ -106,10 +106,13 @@ function c = nlcon(x)
 end
 
 function cost = objV(data,W,H,x,index_delete)
-n = length(x) + sum(index_delete);
-alpha = false(1,n^2);
+x = x(:,1:end/2);
+index_delete = index_delete(:,1:end/2);
+
+n = size(index_delete,2);
+alpha = false(1,n);
 alpha(~index_delete) = x;
-alpha = reshape(alpha,n,n);
+alpha = reshape(alpha,sqrt(n),sqrt(n));
 
 cost = q2_FFF_fun(data,W,H,alpha);
 end
