@@ -22,7 +22,7 @@ function coematrix = q2_create_Inl_coematrix_fun(data)
     end
     index_delete = reshape(index_1',1,n^2);
     
-    Aeq = zeros(n,2*n^2);
+    Aeq = zeros(n,n^2);
     beq = zeros(n,1);
     for k = 1:n   
         Aeq(k,k:n:k*n) = 1;
@@ -30,28 +30,28 @@ function coematrix = q2_create_Inl_coematrix_fun(data)
     end
     Aeq(:,index_delete) = [];
 
-    A_3 = zeros(n,2*n^2);
+    A_3 = zeros(n,n^2);
     b_3 = zeros(n,1);
     for k = 1:n
         A_3(k,n*(k-1)+k:n*k) = order_item_info(k:n,2)';
         b_3(k,:) = max_item_num;
     end
 
-    A_4 = zeros(n,2*n^2);
+    A_4 = zeros(n,n^2);
     b_4 = zeros(n,1);
     for k = 1:n
         A_4(k,n*(k-1)+k:n*k) = order_item_info(k:n,3)';
         b_4(k,:) = max_item_area;
     end
 
-    A_5 = zeros(n, 2*n^2);
+    A_5 = zeros(n, n^2);
     b_5 = zeros(n,1);
     for k = 1:n-1  %j
         A_5(k,n*(k-1)+k+1:n*(k-1)+n) = 1;
         A_5(k,n*(k-1)+k) = -(n-k);
     end
 
-    A_6 = zeros(n, 2*n^2);
+    A_6 = zeros(n, n^2);
     b_6 = zeros(n,1);
     for k = 1:n  %j
         A_6(k,n*(k-1)+k+1:n*(k-1)+n) = 1;
