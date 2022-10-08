@@ -3,7 +3,7 @@
 file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
 width = 1220;
 height = 2440;
-[data_ori, material_index] = data_pre_fun(file(1));
+[data_ori, material_index] = data_pre_fun(file(2));
 max_item_number = 1000;
 max_item_area = 250e6;
 
@@ -15,11 +15,11 @@ max_item_area = 250e6;
 %% 
 is_merge = true;
 iter_num = 0;
+tic
 while is_merge
-    tic
     [material_data,material_data_order] = q2_materials_data_fun(data_ori,material_index,width,height);
     is_merge = false;
-    for k = 1:material_num
+    for k = 1:size(material_data,1)
         if material_data(k,3) == 1
             continue
         end
@@ -33,12 +33,12 @@ while is_merge
             for kkk = kk+1:length(orders)
                 % order_2 的材质k的排版数量
                 order_2 = orders(kkk);
+                index = (data_ori(:,9) == material_data(k,1)) & (data_ori(:,8) == order_2);
+                tmp_data_2 = data_ori(index,:);
                 % 判断数量和面积是否满足要求
                 if size(tmp_data_1,1) + size(tmp_data_2,1) > max_item_number  || sum(tmp_data_1(:,3)) + sum(tmp_data_2(:,3)) > max_item_area
                     continue
                 end
-                index = (data_ori(:,9) == material_data(k,1)) & (data_ori(:,8) == order_2);
-                tmp_data_2 = data_ori(index,:);
                 tmp_num_2 = length(q1_FFF_fun(tmp_data_2,width,height));
                 % order_1+2 的材质k的排版数量
                 tmp_data_12 = [tmp_data_1;tmp_data_2];
@@ -57,9 +57,8 @@ while is_merge
             break
         end
     end
-    iter_num = iter_num+1;
-    disp(iter_num);
-    toc
+    iter_num = iter_num + 1;
+    fprintf("No.%d iter merge: %d & %d. time passed %.2f seconds \n",iter_num, order_1,order_2,toc );
     
 end
     
