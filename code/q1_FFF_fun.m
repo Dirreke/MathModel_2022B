@@ -1,4 +1,4 @@
-function bins = q1_FFF_fun(data_ori,width,height,consider_rotate,create_random)
+function [bins,rate] = q1_FFF_fun(data_ori,width,height,consider_rotate,create_random)
 if nargin < 4
     consider_rotate = 1;
 end
@@ -96,7 +96,7 @@ end
 bins = [bins,bin];
 
 rate = (sum(data_ori(:,5))- sum(data(:,5))/(consider_rotate+1))/ width/height/size(bins,2);
-fprintf("FFF rate %.2f \n",rate*100);
+% fprintf("FFF rate %.2f \n",rate*100);
 
 
 %% check

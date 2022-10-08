@@ -25,7 +25,7 @@ for k = 1:num
    [index,~] = find(material_index(:,1) == material{k});
    data(k,9) = index;   
 end
-material_index(:,2) = 1:size(material_index,1);
+% material_index(:,2) = 1:size(material_index,1);
 
 if is_sorted
     [~,index] = sort(data(:,3),'descend');
