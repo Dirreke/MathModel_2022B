@@ -1,0 +1,128 @@
+file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
+ width = 1220;
+ height = 2440;
+[data_ori, material_index] = data_pre_fun(file(1));
+
+orders = unique(data_ori(:,8));
+num = length(orders);
+
+order_items = orders;
+order_items(:,2) = zeros(num,1);
+order_items_1 = cell(num,1);
+
+for k = 1:num
+    order = orders(k);
+    tmp = data_ori(data_ori(:,8) == order,:);
+    order_items_1(k) = {tmp};
+    order_items(k,2) = size(tmp,1);
+    order_items(k,3) = sum(tmp(:,5));
+end
+
+[~,index] = sort(order_items(:,2),'descend');
+order_items = order_items(index,:); % order num_items area_items
+order_items_1 = order_items_1(index,:);
+%% 
+order_bp_infos = cell(num,1);
+for k = 1:num
+    order_bp_infos(k) = {q3_FFF_fun(data_ori,width,height,order_items(k,1))};
+end
+
+%% 1
+while isempty(order_items)
+    
+    batch.orders = [];
+    batch.unused_item_number = max_item_number;
+    batch.unused_item_area = max_item_area;
+    batch.min_materis_id = 0;
+    batch.min_bins_ratio = 0;
+    batch.bp_info = [];
+    
+    for k = 1:size(order_items,1)
+        if isempty(batch.orders) && order_items(k,2) <= unused_item_number &&  order_items(k,3) <= unused_item_area
+            batch.orders = order_items(k,:);
+            batch.unused_item_number = batch.unused_item_number - order_items(k,2);
+            batch.unused_item_area = batch.unused_item_area - order_items(k,3);
+            [batch.min_bins_ratio,tmp] = min(order_bp_infos{k}(:,4));
+            batch.min_materis_id = order_bp_infos{k}(tmp,4);
+            batch.materis_bin_num = order_bp_infos{k}(tmp,2);
+            batch.bp_info = order_bp_infos{k};
+        elseif ~isempty(batch.orders)
+            tmp_index = order_bp_infos{k}(:,1) == batch.min_materis_id;
+            
+            if sum(tmp_index)~= 0 && (order_bp_infos{k}(tmp_index,4) + batch.min_bins_ratio) <= 1 ...
+                    &&  order_items(k,2) <= unused_item_number &&  order_items(k,3) <= unused_item_area
+                % TRY MERGE
+                bin_total_num_old = batch.materis_bin_num + order_bp_infos(tmp_index,2);
+                orders_merged_bp_info = q3_FFF_fun(data_ori,width,height,[batch.orders(:,1)',order_items(k,1)]);
+                tmp_index = orders_merged_bp_info{k}(:,1) == batch.min_materis_id;
+            
+            && neng hebing && order_items(k,2) < unused_item_number &&  order_items(k,3) < unused_item_area
+            batch.orders = [batch.orders,order_items(k,:)];
+        order_bp_infos(k) = {q3_FFF_fun(order_items(k))};
+    end
+    
+    
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

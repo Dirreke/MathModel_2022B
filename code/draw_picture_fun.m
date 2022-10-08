@@ -1,25 +1,35 @@
-f = fopen("../data/resultA/Output2.csv");
+function draw_picture_fun(input_file,content)
+
+input_file = "../result/figure_dataA/figure_A1.csv";
+if ~isfolder("../result/figuresA")
+    mkdir("../result/figuresA");
+end
+if ~isfolder("../result/figuresA/figure_A1")
+    mkdir("../result/figuresA/figure_A1");
+end
+content = '../result/figuresA/figure_A1/';
+
+f = fopen(input_file);
 fgetl(f);
 data_ori = textscan(f,'%s %s %s %s %f %f %f %f %d','delimiter',',');
-number(:,1) = string(data_ori{1});   % æ‰¹æ¬¡åºå·
-number(:,2) = string(data_ori{3});    % åŸç‰‡åºå· 
-number(:,3) = string(data_ori{4});    % äº§å“ID
-material(:,1) = data_ori{2};    % åŸç‰‡æè´¨
-data(:,1) = data_ori{5};    % äº§å“xåæ ‡
-data(:,2) = data_ori{6};    % äº§å“yåæ ‡
-data(:,3) = data_ori{7};    % äº§å“xæ–¹å‘é•¿åº¦
-data(:,4) = data_ori{8};    % äº§å“yæ–¹å‘é•¿åº¦
-flag(:,1) = data_ori{9};    % æ˜¯å¦ä¸ºäº§å“é¡¹æ ‡å¿—ä½
+fclose(f);
+number(:,1) = string(data_ori{1});   % Åú´ÎĞòºÅ
+number(:,2) = string(data_ori{3});    % Ô­Æ¬ĞòºÅ 
+number(:,3) = string(data_ori{4});    % ²úÆ·ID
+material(:,1) = data_ori{2};    % Ô­Æ¬²ÄÖÊ
+data(:,1) = data_ori{5};    % ²úÆ·x×ø±ê
+data(:,2) = data_ori{6};    % ²úÆ·y×ø±ê
+data(:,3) = data_ori{7};    % ²úÆ·x·½Ïò³¤¶È
+data(:,4) = data_ori{8};    % ²úÆ·y·½Ïò³¤¶È
+flag(:,1) = data_ori{9};    % ÊÇ·ñÎª²úÆ·Ïî±êÖ¾??
 
 numtotal_item=length(number(:,3));
 
 i=1;
-while i<=28%numtotal_item %äº§å“æ€»ä¸ªæ•°
-    content = '../Report/figures/';
+while i<=28%numtotal_item %²úÆ·×Ü¸ö??
     picture = 'Batch'+number(i,1)+'-'+'Board'+number(i,2)+'-'+'Material'+material(i,1);
     figure('NumberTitle', 'off','Name',picture);
  
-   
     hold on;
     rectangle('Position',[0,0,2440,1220],'LineWidth',0.5,'EdgeColor','K','LineStyle','-');
 
@@ -47,7 +57,7 @@ while i<=28%numtotal_item %äº§å“æ€»ä¸ªæ•°
     ylabel('1220mm','fontsize',9,'FontName', 'Times New Roman');
     title(picture);
    
-    while i<=28%numtotal_item  %äº§å“æ€»ä¸ªæ•°
+    while i<=28%numtotal_item  %²úÆ·×Ü¸ö??
     if strcmpi(number(i-1,2), number(i,2))
          if flag(i,1)==1
          cmap=hsv(256);
@@ -68,6 +78,7 @@ while i<=28%numtotal_item %äº§å“æ€»ä¸ªæ•°
    
     hold off;
     saveas(gca,content+picture,'png');
+%     close(gcf);
  
 end
     

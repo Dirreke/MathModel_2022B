@@ -12,3 +12,5 @@ Report/*.pdf
 .vscode/*
 Report/figures/Batch*
 data/resultA/*
+result/**/*
+**/*.mat
