@@ -18,6 +18,8 @@ for k = 1:length(file)
 end
 
 
+save_to_file_fun(results{1},1);
+draw_picture_fun();
 
 
 
