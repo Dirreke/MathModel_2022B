@@ -28,11 +28,9 @@ index_1 = reshape(index_1',1,n^2);
 index_1 = [index_1, index_1];
 
 
-% Aeq_1 = sparse(n^2,2*n^2);
-beq_1 = ones(n^2,1);
 tmp = speye(n^2);
 Aeq_1 = [tmp,tmp];
-
+beq_1 = ones(n^2,1);
 
 Aeq_2 = zeros(n,2*n^2);
 beq_2 = zeros(n,1);
@@ -88,7 +86,7 @@ ub = ones(1,2*n^2);
 lb(index_delete)=[];
 ub(index_delete)=[];
 
-obj = @(x)q2_FFF_fun(data,W,H,x(1:n^2));
+obj = @(x)objV(data,W,H,x,index_delete);
 
 model.obj = obj;
 model.A = A;
@@ -97,13 +95,21 @@ model.Aeq = Aeq;
 model.beq = beq;
 model.lb = lb;
 model.ub = ub;
-model.nonlcon = @(x)nlcon(x,n);
+model.nonlcon = @(x)nlcon(x);
 model.index_delete = index_delete;
 end
 
-function [c,ceq] = nlcon(x,n)
-    alpha = x(1:(1+n)*n/2);
-    beta = x((1+n)*n/2+1:(1+n)*n);
-    c = sum(alpha*beta', 'all');
-    ceq = 0;
+function c = nlcon(x)
+    alpha = x(:,1:end/2);
+    beta = x(:,end/2+1:end);
+    c = sum(alpha.*beta, 2);
+end
+
+function cost = objV(data,W,H,x,index_delete)
+n = length(x) + sum(index_delete);
+alpha = false(1,n^2);
+alpha(~index_delete) = x;
+alpha = reshape(alpha,n,n);
+
+cost = q2_FFF_fun(data,W,H,alpha);
 end
