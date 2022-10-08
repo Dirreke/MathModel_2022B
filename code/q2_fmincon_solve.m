@@ -10,5 +10,19 @@ alpha = reshape(alpha,1,n^2);
 beta = ~alpha;
 x0 = [alpha,beta];
 x0(model.index_delete) = [];
-
-fmincon(model.obj,x0,model.A,model.b,model.Aeq,model.beq,model.lb,model.ub,model.nonlcon)
+x0 = x0';
+options = optimoptions('fmincon','Display','iter');
+fmincon(model.obj,x0,model.A,model.b,model.Aeq,model.beq,model.lb,model.ub,model.nonlcon,options);
+%% 
+tic
+model.obj(x0);
+toc
+tic
+model.nonlcon(x0);
+toc
+tic
+model.A*x0;
+toc
+tic
+model.Aeq*x0;
+toc

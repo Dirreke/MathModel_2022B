@@ -1,9 +1,11 @@
-function model = q2_create_nl_model_fun(W,H,data)
+function model = q2_create_Inl_model_fun(W,H,data)
+% 去掉变量beta，约束为线性、目标函数为非线性的0-1整数规划
 
 % W = 1220;
 % H = 2440;
 % file_path = "../data/dataB/dataB1.csv";
 % data = data_pre_fun(file_path);
+
 
 max_item_num = 1000;            %单个批次产品项（item）总数上限
 max_item_area = 250*1000*1000;  %单个批次产品项（item）的面积总和上限
@@ -25,42 +27,36 @@ for k = 1:n
     end
 end
 index_1 = reshape(index_1',1,n^2);
-index_1 = [index_1, index_1];
 
-
-tmp = speye(n^2);
-Aeq_1 = [tmp,tmp];
-beq_1 = ones(n^2,1);
-
-Aeq_2 = zeros(n,2*n^2);
+Aeq_2 = zeros(n,n^2);
 beq_2 = zeros(n,1);
 for k = 1:n    %j
     Aeq_2(k,k:n:k*n) = 1;
     beq_2(k,:) = 1;
 end
 
-A_3 = zeros(n,2*n^2);
+A_3 = zeros(n,n^2);
 b_3 = zeros(n,1);
 for k = 1:n
     A_3(k,n*(k-1)+k:n*k) = order_item_info(k:n,2)';
     b_3(k,:) = max_item_num;
 end
 
-A_4 = zeros(n,2*n^2);
+A_4 = zeros(n,n^2);
 b_4 = zeros(n,1);
 for k = 1:n
     A_4(k,n*(k-1)+k:n*k) = order_item_info(k:n,3)';
     b_4(k,:) = max_item_area;
 end
 
-A_5 = zeros(n, 2*n^2);
+A_5 = zeros(n, n^2);
 b_5 = zeros(n,1);
 for k = 1:n-1  %j
     A_5(k,n*(k-1)+k+1:n*(k-1)+n) = 1;
     A_5(k,n*(k-1)+k) = -(n-k);
 end
 
-A_6 = zeros(n, 2*n^2);
+A_6 = zeros(n, n^2);
 b_6 = zeros(n,1);
 for k = 1:n  %j
     A_6(k,n*(k-1)+k+1:n*(k-1)+n) = 1;
@@ -69,10 +65,10 @@ end
 
 index_delete = index_1;
 
-Aeq = [Aeq_1;Aeq_2];
-beq = [beq_1;beq_2];
-clear Aeq_1 Aeq_2
-clear beq_1 beq_2
+Aeq = Aeq_2;
+beq = beq_2;
+clear Aeq_2
+clear beq_2
 Aeq(:,index_delete) = [];
 
 A = [A_3;A_4;A_5;A_6];
@@ -95,20 +91,10 @@ model.Aeq = Aeq;
 model.beq = beq;
 model.lb = lb;
 model.ub = ub;
-model.nonlcon = @(x)nlcon(x);
 model.index_delete = index_delete;
 end
 
-function c = nlcon(x)
-    alpha = x(1:end/2);
-    beta = x(end/2+1:end);
-    c = sum(alpha.*beta);
-end
-
 function cost = objV(data,W,H,x,index_delete)
-x = x(1:end/2);
-index_delete = index_delete(1:end/2);
-
 n = length(index_delete);
 alpha = false(1,n);
 alpha(~index_delete) = x;
