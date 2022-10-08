@@ -118,7 +118,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \RequirePackage{hyperref}
 %% Document Layout
 % 页面布局
-\geometry{top=30.0mm,bottom=25.0mm,left=22.5mm,right=22.5mm,headsep=8mm}
+\geometry{top=25.5mm,bottom=25.4mm,left=22.5mm,right=22.5mm,headsep=0mm}
 \renewcommand*{\baselinestretch}{1.38}
 % 修改tabular 环境, 设置表格中的行间距为正文行间距.
 \let\gmcm@oldtabular\tabular
@@ -130,6 +130,8 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	{\gmcm@endoldtabular\egroup}
 % 每行缩进两个汉字
 \setlength\parindent{2em}
+% 段落间距
+\setlength\parskip{0.2em}
 % 设置字体
 % 代码来自https://github.com/OsbertWang/GMCMthesis 这个是OsbertWang，修正支持让各个系统自适应支持近似字体。
 \newif\ifmcm@mac
@@ -471,6 +473,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	\vskip1ex
 	{\noindent\zihao{-4}\heiti\gmcm@cap@keywordsname：}~{\gmcm@tokens@keywords}
 	}
+  
 % 定义附录	
 \renewcommand\appendix{\par
 	\setcounter{section}{0}%
