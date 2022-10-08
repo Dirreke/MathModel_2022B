@@ -46,7 +46,7 @@ while i<=28%numtotal_item %产品总个??
     rand_color_f=rand_color_F(1,1);
     rectangle('Position',[data(i,1),data(i,2),data(i,3),data(i,4)],'LineWidth',0.5,'FaceColor',cmap(rand_color_f,:));
     plot(data(i,1),data(i,2),'K-o','MarkerFaceColor','K','MarkerSize',3);
-    text(data(i,1)+15,data(i,2)+15,'Item'+number(i,3)+'-'+'('+num2str(data(i,1))+','+num2str(data(i,2))+')'+'-'+num2str(data(i,3))+'mm*'+num2str(data(i,4))+'mm','fontsize',9,'FontName', 'Times New Roman');
+    text(data(i,1)+30,data(i,2)+20,'Order'+number(i,3)+'('+num2str(data(i,1))+','+num2str(data(i,2))+')','fontsize',5,'FontName', 'Times New Roman','FontAngle','italic');
     else
     cmap=hsv(256);
     rand_color_F=randperm(255);
@@ -58,8 +58,8 @@ while i<=28%numtotal_item %产品总个??
     set(gca, 'XTick', 0:0:0);
     set(gca, 'YTick', 0:0:0);
     set(gca, 'fontsize',9,'FontName', 'Times New Roman');
-    set(gca, 'position',[0.124 0.03 0.752 0.94]);
-    set(gcf, 'position',[100 200 2000 800]);
+    set(gca, 'position',[0.05 0.1 0.9 0.81]);
+    set(gcf, 'position',[0.75 1.5 333 188]);
     xlabel('2440mm','fontsize',9,'FontName', 'Times New Roman');
     ylabel('1220mm','fontsize',9,'FontName', 'Times New Roman');
     title(picture);
@@ -72,7 +72,7 @@ while i<=28%numtotal_item %产品总个??
          rand_color_f=rand_color_F(1,1);
          rectangle('Position',[data(i,1),data(i,2),data(i,3),data(i,4)],'LineWidth',0.5,'FaceColor',cmap(rand_color_f,:));
          plot(data(i,1),data(i,2),'K-o','MarkerFaceColor','K','MarkerSize',3);
-         text(data(i,1)+15,data(i,2)+15,'Item'+number(i,3)+'-'+'('+num2str(data(i,1))+','+num2str(data(i,2))+')'+'-'+num2str(data(i,3))+'mm*'+num2str(data(i,4))+'mm','fontsize',9,'FontName', 'Times New Roman');
+         text(data(i,1)+30,data(i,2)+20,'Order'+number(i,3)+'('+num2str(data(i,1))+','+num2str(data(i,2))+')','fontsize',5,'FontName', 'Times New Roman','FontAngle','italic');
          else
          rectangle('Position',[data(i,1),data(i,2),data(i,3),data(i,4)],'LineWidth',0.2,'EdgeColor','k','LineStyle',':');
          end
