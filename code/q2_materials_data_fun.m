@@ -1,11 +1,13 @@
+function [material_data,material_data_order] = q2_materials_data_fun(data_ori,material_index,width,height)
+% file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
+% % for k = 1:length(file)
+% %     data_ori = data_pre_fun(file(k));
+% % end
+% width = 1220;
+% height = 2440;
+% [data_ori, material_index] = data_pre_fun(file(1));
 
-file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
-% for k = 1:length(file)
-%     data_ori = data_pre_fun(file(k));
-% end
- width = 1220;
- height = 2440;
-[data_ori, material_index] = data_pre_fun(file(1));
+
 material_num = size(material_index,1);
 material_data = (1:material_num)';
 material_data(:,2) = zeros(material_num,1);
@@ -20,7 +22,9 @@ for k = 1:material_num
     
     % tags
     tmp_data = data_ori(index,:);
+%     tic
     [tmp_bins,rate] = q1_FFF_fun(tmp_data,width,height);
+%     toc
     tmp_num_bins = length(tmp_bins);
     material_data(k,4) = tmp_num_bins;
     material_data(k,5) = rate;

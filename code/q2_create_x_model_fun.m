@@ -36,8 +36,14 @@ function [c,ceq] = nlcon_x(x, coematrix)
 %     AEQx_sum = sum(abs(AEQx), 'all');  %对每项取绝对值求和
     
 %     c = Ax_sum + AEQx_sum;
+
+% int process
+    x_old = x;
+    x = round(x);
+    ceq_2 = (x - x_old)'*10;
+    
     c = Ax;
-    ceq = AEQx;
+    ceq = [AEQx;ceq_2];
 end
 
 function cost = objV(data,W,H,x)
@@ -55,6 +61,7 @@ function alpha = x_to_alphax(x)  %x(i)=j 到alpha(j,i)的映射
         end
     end
     index_delete = reshape(index_1',1,n^2);
+   
     
     alpha = zeros(n,n);
     for k = 1:n  %遍历x(k)
