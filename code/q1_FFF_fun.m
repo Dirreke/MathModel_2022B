@@ -51,7 +51,7 @@ while ~isempty(data)
         if data_flags(k) == 1
             continue;
         end
-        if isempty(strip.stacks) &&  data(k,3) <= bin.unused_height
+        if isempty(strip.stacks) &&  data(k,3) <= bin.unused_height && data(k,4) <= strip.unused_width
             stack.width = data(k,4);
             stack.unused_height = 0;
             stack.items = data(k,:);
