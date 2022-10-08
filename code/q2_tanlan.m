@@ -3,7 +3,7 @@
 file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
 width = 1220;
 height = 2440;
-[data_ori, material_index] = data_pre_fun(file(3));
+data_ori = data_pre_fun(file(3));
 max_item_number = 1000;
 max_item_area = 250e6;
 data = data_ori;
@@ -13,7 +13,7 @@ is_merge = true;
 iter_num = 0;
 tic
 while is_merge
-    [material_data,material_data_order] = q2_materials_data_fun(data_ori,material_index,width,height);
+    [material_data,material_data_order] = q2_materials_data_fun(data_ori,width,height);
     is_merge = false;
     for k = 1:size(material_data,1)
         if material_data(k,3) == 1

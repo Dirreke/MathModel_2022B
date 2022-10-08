@@ -1,4 +1,4 @@
-function [material_data,material_data_order] = q2_materials_data_fun(data_ori,material_index,width,height)
+function [material_data,material_data_order] = q2_materials_data_fun(data_ori,width,height)
 % file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
 % % for k = 1:length(file)
 % %     data_ori = data_pre_fun(file(k));
@@ -8,7 +8,7 @@ function [material_data,material_data_order] = q2_materials_data_fun(data_ori,ma
 % [data_ori, material_index] = data_pre_fun(file(1));
 
 
-material_num = size(material_index,1);
+material_num = size(unique(data_ori(:,9)),1);
 material_data = (1:material_num)';
 material_data(:,2) = zeros(material_num,1);
 material_data(:,3) = zeros(material_num,1);
