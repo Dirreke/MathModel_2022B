@@ -1,9 +1,10 @@
-function save_to_file_fun(data_type, batches, material_name)
+function save_to_file_fun(data_type, file_id,batches, material_name)
 %save_to_file_fun save data to csv file
 %
 %   Inputs (all are optional):
 %       DATA_TYPE : 1 for question 1
 %                   2 for question 2
+%       FILE_ID : the File ID 
 %       BATCHES : bins for question 1
 %                 batches for question 2
 %       MATERIALS_NAME : material_name for question 1
@@ -112,7 +113,6 @@ for q = 1:num_batch
 end
 
 %% print data to FILE
-dataid = 1;
 
 if data_type == 1
     type = 'A';
@@ -127,7 +127,7 @@ if ~isfolder("../result/figure_data" + type)
     mkdir("../result/figure_data" + type);
 end
 
-fileID = fopen("../result/figure_data" + type + '/figure_' + type + dataid + '.csv', 'w+', 'n', 'GB2312');
+fileID = fopen("../result/figure_data" + type + '/figure_' + type + file_id + '.csv', 'w+', 'n', 'GB2312');
 fprintf(fileID, '%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '批次序号', '原片材质', '原片序号', '产品id', '产品x坐标', '产品y坐标', '产品x方向长度', '产品y方向长度', "是否为产品项");
 
 for item_code = 1:(i_total - 1)
@@ -144,7 +144,7 @@ if ~isfolder("../result/result" + type)
 end
 
 if data_type == 1
-    fileID = fopen("../result/result" + type + '/cut_program_' + type + dataid + '.csv', 'w+', 'n', 'GB2312');
+    fileID = fopen("../result/result" + type + '/cut_program_' + type + file_id + '.csv', 'w+', 'n', 'GB2312');
     fprintf(fileID, '%s,%s,%s,%s,%s,%s,%s\n', '原片材质', '原片序号', '产品id', '产品x坐标', '产品y坐标', '产品x方向长度', '产品y方向长度');
     
     for item_code = 1:(i_total - 1)
@@ -158,7 +158,7 @@ if data_type == 1
     
     fclose(fileID);
 elseif data_type == 2
-    fileID = fopen("../result/result" + type + '/sum_order_' + type + dataid + '.csv', 'w+', 'n', 'GB2312');
+    fileID = fopen("../result/result" + type + '/sum_order_' + type + file_id + '.csv', 'w+', 'n', 'GB2312');
     fprintf(fileID, '%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '批次序号', '原片材质', '原片序号', '产品id', '产品x坐标', '产品y坐标', '产品x方向长度', '产品y方向长度', "是否为产品项");
     
     for item_code = 1:(i_total - 1)

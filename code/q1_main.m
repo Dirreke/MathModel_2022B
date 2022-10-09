@@ -24,8 +24,9 @@ for k = 1:length(file)
     else
         results{k} = bins_1;
     end
+    save_to_file_fun(1, k,results{k}, material_index(1));
+    draw_picture_fun(1, k);
     
 end
 
-save_to_file_fun(1, results{1}, material_index(1));
-draw_picture_fun();
+
