@@ -504,9 +504,8 @@
 \end{equation}
 \noindent 式中，$m$为订单总数。
 
-\subsubsection{方向说明}
 
-\subsubsection{目标函数}
+\subsubsection{模型建立}
 该问题目标函数为总的板材利用率最高，为总原始板材使用数量最少。
 
 \textbf{定义}非线性函数$f_q(d_{q,1},d_{q,2},\cdots,d_{q,m})$，表示在第q批次的订单组合$(d_{q,1},d_{q,2},\cdots,d_{q,m})$利用问题一模型所求得的最佳排样方案所使用的原始板材数量。
@@ -525,24 +524,56 @@
 \end{equation}
 
 
-不等式约束\ref{编号原则2}保证决策变量$d_{q,p}$满足其编号原则。
+在$d_{q,p}$的编号原则约定下，不等式约束\ref{编号原则2}保证订单$p$仅分配给非空的批次$q$。
 
 \begin{equation}   
-\sum_{p=q}^{n} d_{q,p} \le (n-q+1)d_{q,q},\quad \forall q\le n
+\sum_{p=q}^{m} d_{q,p} \le (m-q+1)d_{q,q},\quad \forall q\le m,q\in \mathbb{N}^+\label{编号原则2}
 \end{equation}
 
+\textbf{定义}$n_p$为订单p所包含的产品项个数，为保证加工环节快速流转，每个批次产品项（item）总数不能超过限定值，则有
 
 \begin{equation}   
-    \sum_{p=q}^{n} d_{q,p} < \text{max\_item\_num},\quad \forall q \le max\_item\_num
+    \sum_{p=q}^{m} n_pd_{q,p} \le \text{max\_item\_num},\quad \forall q \le m, q\in \mathbb{N}^+
 \end{equation}
+
+\textbf{定义}$S_p$为订单p所包含的产品项总面积，因工厂产能限制，每个批次产品项（item）的面积总和不能超过限定值，所以有
+
 \begin{equation}   
-    \sum_{p=q}^{n} S_pd_{q,p} < max\_item\_area,\quad \forall q\le n
+    \sum_{p=q}^{m} S_pd_{q,p} le max\_item\_area,\quad \forall q\le m,q\in \mathbb{N}^+
 \end{equation}
 
+因此，可以得到混合整数非线性规划模型
+\begin{equation}
+    \begin{cases}
+        \mathbf{min} \sum_{q=1}^{m} f_q(d_{q,1},d_{q,2},\cdots,d_{q,m}) \\
+        \mathbf{s.t.}
+        \begin{cases}
+            \sum_{q=1}^{p} d_{q,p}=1,\quad \forall p\le m,p \in \mathbb{N}^+ \\
+            \sum_{p=q}^{m} d_{q,p} \le (m-q+1)d_{q,q},\quad \forall q\le m,q\in \mathbb{N}^+  \\
+            \sum_{p=q}^{m} n_pd_{q,p} \le \text{max\_item\_num},\quad \forall q \le m, q\in \mathbb{N}^+\\
+            \sum_{p=q}^{m} S_pd_{q,p} le max\_item\_area,\quad \forall q\le m,q\in \mathbb{N}^+ \\
+        \end{cases}  \label{问题二模型}
+    \end{cases}
+\end{equation}
 
-\subsubsection{数学模型}
 
 \subsection{模型求解}
+\subsubsection{数学模型特点分析}
+	\textbf{数学模型特点} 
+	
+    该数学模型外层模型为混合整数非线性模型，与问题一类似，该数学模型仍然具有变量多、量级重的问题，变量数量呈 $ n^2 $ 量级。此外，由于该模型为两步优化模型，所以内层模型的优化速度也极大程度的影响了整个模型的迭代求解过程。
+	
+	\textbf{内层模型求解} 由于内层模型的计算速度和准确性极大程度的影响了全局模型的优化效率和效果，所以综合考虑此处内层模型使用问题一4.3.2节中FFFD算法求解。
+	
+	\textbf{外层模型求解} 传统算法仍难以解决该类大规模混合整数非线性规划问题，设计合适的贪心算法并求得该模型的局部最优解，仍然是求解该模型的关键。
+
+\subsubsection{优先搜索算法设计}
+% 该算法旨在解决订单组批问题，显然该问题也可以如下描述：总共有$m$个生产批次，每个生产批次仅含1个订单，现在将核实的批次整合到一起
+
+在解决该一般问题之前，先考虑一组特异性数据。假定在所有订单中材质$t$的产品项有且仅有2个，分别被2组订单$\text{Order}_1$、$\text{Order}_2$包含，且两个产品项可排样在1块原始板材上，则显然，当且仅当这2组订单被组合到同一批次中，该材质所使用的原始板材数量才会减少。如果2组订单被分配到不同的批次中，则该材质的板材利用率不会再下降。相反地，对于数量更多的材质$t'$，其被订单$p$等大批量组订单所包含，当其中两个或几个订单被分配到不同批次后，仍然会有其他可选批次与之
+
+
+\subsubsection{优先搜索算法}
 1) 初始化订单$p$的生产批次为第$q=p$批。
 
 2) 对每种材质全部产品项进行排样，并按照其所需的  排序，排在前位的材质中的批次，合并为一个批次的优先级更高。
