@@ -1,4 +1,4 @@
-function [bins, rate] = q1_FFF_fun(data_ori, width, height, consider_rotate, create_random)
+function [bins, ratio, num_plates] = q1_FFF_fun(data_ori, width, height, consider_rotate, create_random)
 
 if nargin < 4
     consider_rotate = 1;
@@ -16,7 +16,7 @@ end
 % width = 1220;
 if isempty(data_ori)
     bins = [];
-    rate = [];
+    ratio = [];
     return
 end
 
@@ -58,7 +58,6 @@ while ~isempty(data)
     bin_used_area = 0;
     
     for k = 1:size(data, 1)
-        
         if data_flags(k) == 1
             continue;
         end
@@ -96,12 +95,9 @@ while ~isempty(data)
                     % remove item(k)
                     data_flags(data(:, 1) == data(kk, 1)) = 1;
                 end
-                
             end
-            
             strip.stacks = [strip.stacks, stack];
         end
-        
     end
     
     data(data_flags, :) = [];
@@ -112,24 +108,22 @@ while ~isempty(data)
             warning("·Å²»ÏÂ");
             break
         end
-        
         bins = [bins, bin];
         bin.unused_height = height;
         bin.width = width;
         bin.strips = [];
-        bin.ratio = bin_used_area / height/width;
+        bin.ratio = 0;
     else
         bin.strips = [bin.strips, strip];
         bin.unused_height = bin.unused_height - strip.height;
         bin.ratio = bin_used_area / height/width;
     end
-     
-    
 end
 
 bins = [bins, bin];
 
-rate = (sum(data_ori(:, 5)) - sum(data(:, 5)) / (consider_rotate + 1)) / width / height / size(bins, 2);
+num_plates = size(bins, 2);
+ratio = (sum(data_ori(:, 5)) - sum(data(:, 5)) / (consider_rotate + 1)) / width / height / num_plates;
 % fprintf("FFF rate %.2f \n",rate*100);
 
 %% check

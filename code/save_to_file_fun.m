@@ -1,4 +1,4 @@
-function save_to_file_fun(data_type, file_id,batches, material_name)
+function save_to_file_fun(data_type, file_id,batches, material_index)
 %save_to_file_fun save data to csv file
 %
 %   Inputs (all are optional):
@@ -7,8 +7,8 @@ function save_to_file_fun(data_type, file_id,batches, material_name)
 %       FILE_ID : the File ID 
 %       BATCHES : bins for question 1
 %                 batches for question 2
-%       MATERIALS_NAME : material_name for question 1
-%             and is unused if `DATA_TYPE = 2`
+%       MATERIALS_INDEX : material_name  for question 1
+%                     and material_index for question 2
 %
 
 %%
@@ -21,7 +21,7 @@ function save_to_file_fun(data_type, file_id,batches, material_name)
 if data_type == 1
     bins = batches;
     material_pack.bins = bins;
-    material_pack.material_name = material_name;
+    material_pack.material_id = 1;
     batch.material_packs = material_pack;
     batches = batch;
 end
@@ -36,7 +36,7 @@ for q = 1:num_batch
     for qq = 1:num_material_pack
         bins = batches(q).material_packs(qq).bins;
         
-        material_name = batches(q).material_packs(qq).material_name; % 原片材质
+        material_name = material_index(batches(q).material_packs(qq).material_name); % 原片材质
         num_bin = length(bins);
         
         for k = 1:num_bin

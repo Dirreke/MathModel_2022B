@@ -1,29 +1,13 @@
-function num_plates = q2_FFF_fun(data_ori, width, height, alpha, materials)
+function [material_packs,ratio,num_plates] = q2_FFF_fun(data_ori, width, height, orders, materials)
 
-% data_ori = data_pre_fun("../data/dataB/dataB1.csv");
+% data_ori = data_pre_fun("../data/dataB/dataB2.csv");
 % height = 1220;
 % width = 2440;
-% %     alpha = {[6,7]};
-% alpha = false(3,length(unique(data_ori(:,8))));
-% alpha(2:end,6) = 1;
-% alpha(2:end,7) = 1;
+% orders = [91,133];
+% nargin = 4;
 
-%     if max(alpha) == 1 && size(alpha,2) ~= 1
-
-num = size(alpha, 1);
-batches = cell(num, 1);
-num_plates = zeros(num, 1);
+num = length(orders);
 %% convert input type
-if ~iscell(alpha)
-    
-    for k = 1:num
-        tmp_index = find(alpha(k, :) == 1);
-        batches(k) = {tmp_index};
-    end
-    
-else
-    batches = alpha;
-end
 
 if nargin == 5
     special_materials = 1;
@@ -32,33 +16,42 @@ else
 end
 
 %% into_iter
-for k = 1:num
-    
-    num_plates(k) = 0;
-    tmp_orders = batches{k};
-    
-    if isempty(tmp_orders)
-        continue
-    end
-    
-    tmp_items = [];
-    
-    for tmp_order = tmp_orders
-        tmp_items = [tmp_items; data_ori(data_ori(:, 8) == tmp_order, :)];
-    end
-    
-    if special_materials
-        tmp_materials = materials;
-    else
-        tmp_materials = unique(tmp_items(:, 9))';
-    end
-    
-    for tmp_material = tmp_materials
-        data_new = tmp_items(tmp_items(:, 9) == tmp_material, :);
-        tmp_bins = q1_FFF_fun(data_new, width, height);
-        num_plates(k) = num_plates(k) + length(tmp_bins);
-    end
-    
+
+% orders_BP_info(k) = 0;
+
+tmp_items = [];
+
+for tmp_order = orders
+    tmp_items = [tmp_items; data_ori(data_ori(:, 8) == tmp_order, :)];
 end
+
+if special_materials
+    tmp_materials = materials;
+else
+    tmp_materials = unique(tmp_items(:, 9))';
+end
+
+material_pack.material_id = []; %材质序号
+material_pack.bins = []; %所包含的bins
+material_pack.items = []; %此订单此材质的所有items
+material_pack.ratio = [];
+material_packs = repmat(material_pack,1,length(tmp_materials));
+num_plates = 0;
+
+for k = 1:length(tmp_materials)
+    tmp_material = tmp_materials(k);
+    data_new = tmp_items(tmp_items(:, 9) == tmp_material, :);
+    [tmp_bins,tmp_ratio,tmp_num_plates] = q1_FFF_fun(data_new, width, height);
+    
+    material_pack.material_id = tmp_materials(k); %材质序号
+    material_pack.bins = tmp_bins; %所包含的bins
+    material_pack.items = data_new; %此订单此材质的所有items
+    material_pack.ratio = tmp_ratio;
+    material_packs(k) = material_pack;
+    num_plates = num_plates + tmp_num_plates;
+end
+    ratio = sum(tmp_items(:, 5)) / width / height / num_plates;
+
+
 
 end
