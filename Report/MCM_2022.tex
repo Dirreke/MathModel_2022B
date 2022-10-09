@@ -55,7 +55,7 @@
 
 （6）所有订单的交货期均相同；
 
-（7）所有产品项的宽度均小于板材原片的宽度，长度均小于板材原片的长度。
+（7）所有产品项的宽度均小于板材原片的宽度，高度均小于板材原片的高度。
 
 \quad
 
@@ -95,7 +95,7 @@
 
 \textbf{标准排样形式} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含产品项的移动并不改变此板材的可利用面积，故不改变整体的板材使用方案及数量。为规范问题分析与求解，我们通过将每个产品项移动到板材最左边和最下面的位置，形成所谓的排样标准形式，示例见图1。在后续问题讨论中，我们只考虑标准形式排样。
 
-\textbf{板材及各组成的编号规则} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含条带的顺序改变、任一条带中堆栈的顺序改变、或任一堆栈中产品项的顺序改变，均不会改变此板材的可利用面积，故不改变整体的板材使用方案及数量。考虑实际排样场景，宽度近似的情况下，长度较长的产品项相比长度较短的产品项，对板材余料的可用性要求更高，即能找到可容纳的板材类型更少。因此优先考虑更长的产品项纳入板材排样，由长度小的板材作为灵活插入项，去提高已排长产品项的各板材的使用面积，理论上可一定程度上比随机选取产品项排样效率更好。故我们按照h1>=h2>=...>=hn的顺序，对产品项进行编号。一个可行解决方案最多包含n个堆栈，我们取其所含产品项的最小编号作为此堆栈的编号。在此编号规则下，对于堆栈j，我们可以知道它一定包含且所含产品项最长的是产品项j，且编号小于j的产品项均不在此堆栈中。故这样的编号规则可以给后续建模即计算带来较优的简化。类似的，约定一个解决方案最多有n个条带，用条带所含堆栈的最小编号作为此条带的编号；一个解决方案最多需要n个板材，用板材所含堆栈的最小编号作为此板材的编号。
+\textbf{板材及各组成的编号规则} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含条带的顺序改变、任一条带中堆栈的顺序改变、或任一堆栈中产品项的顺序改变，均不会改变此板材的可利用面积，故不改变整体的板材使用方案及数量。考虑实际排样场景，宽度近似的情况下，高度较长的产品项相比高度较短的产品项，对板材余料的可用性要求更高，即能找到可容纳的板材类型更少。因此优先考虑高度更长的产品项纳入板材排样，由高度小的板材作为灵活插入项，去提高已排长产品项的各板材的使用面积，理论上可一定程度上比随机选取产品项排样效率更好。故我们按照h1>=h2>=...>=hn的顺序，对产品项进行编号。一个可行解决方案最多包含n个堆栈，我们取其所含产品项的最小编号作为此堆栈的编号。在此编号规则下，对于堆栈j，我们可以知道它一定包含且所含产品项最长的是产品项j，且编号小于j的产品项均不在此堆栈中。故这样的编号规则可以给后续建模即计算带来较优的简化。类似的，约定一个解决方案最多有n个条带，用条带所含堆栈的最小编号作为此条带的编号；一个解决方案最多需要n个板材，用板材所含堆栈的最小编号作为此板材的编号。
 
 
 \subsection{模型建立}
@@ -126,52 +126,14 @@
     \end{cases}
 \end{equation}
 
-\subsubsection{编号规则}
+在此变量定义下，我们可以计算堆栈k的高度H(k)为：
 
-（1）\textbf{产品项}：将各个产品项按长度从大到小排序后，从1到n依次编号；
+这样引入的模型约束是非线性的，不利于后续的求解。为了获得堆栈高度线性表达式，我们引入辅助变量$\delta_{l,i,j}$ ，它表征了产品项i对板材l中所有条带的高度有影响、并被包含于堆栈j中，其定义如下：
 
-（2）\textbf{栈}：用栈中包含产品项的最小编号为该栈编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何产品项、也不包含于任何条带的空栈；
 
-（3） \textbf{条带}：用条带中包含栈的最小编号为该条带编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何栈、也不包含于任何板材原片的空条带；
+即，$\delta_{l,i,j} = 1$当且仅当项目i包含在堆栈j中，同时堆栈j包含在条带j中（则堆栈i的高度会影响条带j的高度），同时条带j在板材l中。
 
-（4）\textbf{板材原片}：用板材原片中包含条带的最小编号为该板材原片编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何条带（未使用）的空板材原片。
-
-根据上述编号规则，可知
-% （这里注意要不要写成约束）
-
-\begin{equation}
-    h_{1} \ge h_{2} \ge ... \ge h_{n}
-\end{equation} 
-\begin{equation}
-    a_{j,i}=0, \quad   j>i
-\end{equation}
-\begin{equation}
-    b_{k,j}=0, \quad   k>j
-\end{equation}
-\begin{equation}
-    r_{l,k}=0, \quad   l>k
-\end{equation}
-\begin{equation}
-    a_{j,j}=
-    \begin{cases}
-        1, \quad  & Stack_j \neq  \phi  \\
-        0,\quad  & Stack_j  =  \phi  \\
-    \end{cases}
-\end{equation}
-\begin{equation}
-    b_{k,k}=
-    \begin{cases}
-        1, \quad  & Stripe_k \neq  \phi  \\
-        0,\quad  & Stripe_k =  \phi  \\
-    \end{cases}
-\end{equation}
-\begin{equation}
-    r_{l,l}=
-    \begin{cases}
-        1, \quad  & Bin_l \neq  \phi  \\
-        0,\quad  & Bin_l = \phi  \\
-    \end{cases}
-\end{equation}
+则我们可以用线性的方式计算板材l的已使用高度：
 
 \subsubsection{方向说明}
 为了便于后续讨论，本文规定第一阶段切割方向为x方向，垂直切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}、图\ref{方向说明2}，才
@@ -190,110 +152,149 @@
     \end{minipage}
 \end{figure}
 
-\subsubsection{目标函数}
-最小化板材原片使用数量：
-\begin{equation}
-    Min \sum_{l=1}^{n} r_{l,l} 
-\end{equation}
 
-\subsubsection{约束条件}
-每个产品项当且仅当出现在一个栈中
-\begin{equation}
-    \sum_{j=1}^{n} a_{j,i}=\sum_{j=1}^{i} a_{j,i}=1
-\end{equation}  
-
-而每个非空栈当且仅当出现在一个条带中
-\begin{equation}
-    \sum_{k=1}^{n} b_{k,j}=\sum_{k=1}^{j} b_{k,j}=a_{j,j}
-\end{equation}  
-
-同理
-
-\begin{equation}
-    \sum_{l=1}^{n} r_{l,k}=\sum_{l=1}^{k} r_{l,k} =b_{k,k}
-\end{equation}  
-
-\begin{equation}
-    \sum_{i=1}^{n} r_{j,i}=1
-\end{equation}  
-
-
-\begin{equation}
-    a_{j,i}=0, \quad   h_{i}+h_{j}>H
-\end{equation}
-\begin{equation}
-    a_{j,i}=0, \quad  w_{i} \ne w_{j}
-\end{equation}
-
-
-\begin{equation}
-    a_{j,j}=1
-\end{equation}
-
-
-\begin{equation}
-    b_{k,k}=1
-\end{equation}
-
-\begin{equation}
-    r_{l,l}=1
-\end{equation}
-
-
-
-
-
-
-
-
-
-
-
-
-相同栈里的产品项宽度或长度相同
-\begin{equation}
-    \sum_{l=1}^{k} a_{l,k}=1,\quad \forall k\leqslant n
-\end{equation}  
-
-
-通过前述问题分析，我们建立了如下数学模型：
-
-\begin{equation}
-    \begin{aligned}
-    Min \sum_{l=1}^{n} r_{l,l}\\
-    Min \sum_{l=1}^{n} r_{l,l}
-    \end{aligned}
-\end{equation}  
-
-
-\begin{equation}
-    \begin{aligned}
-    Min \sum_{l=1}^{n} r_{l,l}\\
-    Min \sum_{l=1}^{n} r_{l,l}
-    \end{aligned}
-\end{equation}  
-
-\subsubsection{条件限制}
-
-\subsubsection{数学模型}
-
+\subsubsection{模型建立}
 根据每次切割均必须垂直于板材边界，易知对于统一板材而言切割只有垂直于高或者垂直于宽两种方向，且各个阶段的切割方向交替进行，即第一阶段与第三阶段切割方向一致，第二阶段切割方向垂直于第一和第三阶段。为便于后续讨论，我们不妨规定在第一阶段完成尽可能多的切割。
 
+完整的问题一的\textbf{三阶段2BP二进制整数线性规划模型}如下所示。
+
+
+目标函数（16）是最小化所使用的板材数量，如4.1节中的问题分析，此目标与题意中的尽可能减少板材用量等价，且更为简洁直观、便于计算。当 rll=1 时表示板材l被使用，故（1）式即为此方案所用的板材总数。
+
+等式约束（17）保证每个产品项i必须被排样一次。不等式约束（18）确保产品项只会被分配给已使用的堆栈j。等式约束（19）保证了排样在同一堆栈中的产品项必须具有相同的宽度，并且任何一个堆栈中的产品项的总高度不得超过板材高度H。等式约束（20）保证每个已使用的堆栈j，被准确排样在条带j中。不等式约束（21）-（22）确保每个堆栈j的高度不会超过它所在的条带k的高度。此约束规则被拆分为“严格小于”和“小于等于”两个式子，以避免堆栈高度相同时出现歧义。等式约束（24）保证每个已使用的条带被准确打包到板材中。不等式约束（25）确保每个板材的高度大于等于所含条带的总高度。不等式约束（26）根据决策变量的定义（14）设置其值。不等式约束（27）确保没有条带被排样进未使用的板材中。
+
+（28）-（31）为变量的范围。
 
 
 
+%\subsubsection{编号规则}
+%
+%（1）\textbf{产品项}：将各个产品项按长度从大到小排序后，从1到n依次编号；
+%
+%（2）\textbf{栈}：用栈中包含产品项的最小编号为该栈编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何产品项、也不包含于任何条带的空栈；
+%
+%（3） \textbf{条带}：用条带中包含栈的最小编号为该条带编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何栈、也不包含于任何板材原片的空条带；
+%
+%（4）\textbf{板材原片}：用板材原片中包含条带的最小编号为该板材原片编号，若1到n中还有剩余编号，则这些编号分别对应一个不包含任何条带（未使用）的空板材原片。
+%
+%根据上述编号规则，可知
+%% （这里注意要不要写成约束）
+%
+%\begin{equation}
+%    h_{1} \ge h_{2} \ge ... \ge h_{n}
+%\end{equation} 
+%\begin{equation}
+%    a_{j,i}=0, \quad   j>i
+%\end{equation}
+%\begin{equation}
+%    b_{k,j}=0, \quad   k>j
+%\end{equation}
+%\begin{equation}
+%    r_{l,k}=0, \quad   l>k
+%\end{equation}
+%\begin{equation}
+%    a_{j,j}=
+%    \begin{cases}
+%        1, \quad  & Stack_j \neq  \phi  \\
+%        0,\quad  & Stack_j  =  \phi  \\
+%    \end{cases}
+%\end{equation}
+%\begin{equation}
+%    b_{k,k}=
+%    \begin{cases}
+%        1, \quad  & Stripe_k \neq  \phi  \\
+%        0,\quad  & Stripe_k =  \phi  \\
+%    \end{cases}
+%\end{equation}
+%\begin{equation}
+%    r_{l,l}=
+%    \begin{cases}
+%        1, \quad  & Bin_l \neq  \phi  \\
+%        0,\quad  & Bin_l = \phi  \\
+%    \end{cases}
+%\end{equation}
+%
+%\subsubsection{目标函数}
+%最小化板材原片使用数量：
+%\begin{equation}
+%    Min \sum_{l=1}^{n} r_{l,l} 
+%\end{equation}
+%
+%\subsubsection{约束条件}
+%每个产品项当且仅当出现在一个栈中
+%\begin{equation}
+%    \sum_{j=1}^{n} a_{j,i}=\sum_{j=1}^{i} a_{j,i}=1
+%\end{equation}  
+%
+%而每个非空栈当且仅当出现在一个条带中
+%\begin{equation}
+%    \sum_{k=1}^{n} b_{k,j}=\sum_{k=1}^{j} b_{k,j}=a_{j,j}
+%\end{equation}  
+%
+%同理
+%
+%\begin{equation}
+%    \sum_{l=1}^{n} r_{l,k}=\sum_{l=1}^{k} r_{l,k} =b_{k,k}
+%\end{equation}  
+%
+%\begin{equation}
+%    \sum_{i=1}^{n} r_{j,i}=1
+%\end{equation}  
+%
+%
+%\begin{equation}
+%    a_{j,i}=0, \quad   h_{i}+h_{j}>H
+%\end{equation}
+%\begin{equation}
+%    a_{j,i}=0, \quad  w_{i} \ne w_{j}
+%\end{equation}
+%
+%
+%\begin{equation}
+%    a_{j,j}=1
+%\end{equation}
+%
+%
+%\begin{equation}
+%    b_{k,k}=1
+%\end{equation}
+%
+%\begin{equation}
+%    r_{l,l}=1
+%\end{equation}
+%
+%
+%相同栈里的产品项宽度或长度相同
+%\begin{equation}
+%    \sum_{l=1}^{k} a_{l,k}=1,\quad \forall k\leqslant n
+%\end{equation}  
+%
+%
+%通过前述问题分析，我们建立了如下数学模型：
+%
+%\begin{equation}
+%    \begin{aligned}
+%    Min \sum_{l=1}^{n} r_{l,l}\\
+%    Min \sum_{l=1}^{n} r_{l,l}
+%    \end{aligned}
+%\end{equation}  
+%
+%
+%\begin{equation}
+%    \begin{aligned}
+%    Min \sum_{l=1}^{n} r_{l,l}\\
+%    Min \sum_{l=1}^{n} r_{l,l}
+%    \end{aligned}
+%\end{equation}  
 
 
-
-此外，不妨规定每个条带中包含的长度最大的条带始终由单个产品项组成。
-
-
-
-综上，针对问题一排布优化建立的\textbf{整数线性规划模型}如下：
 
 \subsection{模型求解}
 
 \subsection{结果分析}
+
+\subsection{模型及算法评价}
+
 
 \section{问题二订单组批}
 
