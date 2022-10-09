@@ -1,7 +1,12 @@
-function draw_picture_fun(input_file,content)
+function draw_picture_fun(data_type,id)
 
-input_file = "../result/figure_dataA/figure_A1.csv";
-content = "../result/figuresA/";
+if data_type == 1
+    content = "../result/figuresA/";
+    input_file = "../result/figure_dataA/figure_A" + id + ".csv";
+elseif data_type == 2
+    content = "../result/figuresB/";
+    input_file = "../result/figure_dataB/figure_B"+id+".csv";
+end
 
 file_info = dir(input_file);
 tmp = strfind(file_info.name,'.');
