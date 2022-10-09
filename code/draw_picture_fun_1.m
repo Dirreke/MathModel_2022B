@@ -1,25 +1,13 @@
-function draw_picture_fun(data_type,id)
+function draw_picture_fun(input_file,content)
 
-if data_type == 1
-    content = "../result/figuresA/";
-    input_file = "../result/figure_dataA/figure_A" + id + ".csv";
-elseif data_type == 2
-    content = "../result/figuresB/";
-    input_file = "../result/figure_dataB/figure_B"+id+".csv";
+input_file = "../result/figure_dataA/figure_A1.csv";
+if ~isfolder("../result/figuresA")
+    mkdir("../result/figuresA");
 end
-
-file_info = dir(input_file);
-tmp = strfind(file_info.name,'.');
-if ~isempty(tmp)
-    tmp = tmp(end);
-    file_name = file_info.name(1:tmp-1);
-else
-    file_name = file_info.name;
+if ~isfolder("../result/figuresA/figure_A1")
+    mkdir("../result/figuresA/figure_A1");
 end
-content = content + '/' + file_name + '/';
-if ~isfolder(content)
-    mkdir(content);
-end
+content = '../result/figuresA/figure_A1/';
 
 f = fopen(input_file);
 fgetl(f);
@@ -51,7 +39,11 @@ while i<=28%numtotal_item %产品总个??
     rand_color_f=rand_color_F(1,1);
     rectangle('Position',[data(i,2),data(i,1),data(i,4),data(i,3)],'LineWidth',0.5,'FaceColor',cmap(rand_color_f,:));
     plot(data(i,2),data(i,1),'K-o','MarkerFaceColor','K','MarkerSize',3);
-    text(data(i,2)+30,data(i,1)+50,'Item'+number(i,3)+'('+num2str(data(i,2))+','+num2str(data(i,1))+')'+num2str(data(i,4))+'*'+num2str(data(i,3)),'fontsize',6,'FontName', 'Times New Roman','FontAngle','italic');
+    
+    %str_b=num2str(data(i,4))+'*'+num2str(data(i,3));
+    %str={str_a,str_b};
+ 
+    text(data(i,2)+30,data(i,1)+50,1,'Item'+number(i,3)+'('+num2str(data(i,2))+','+num2str(data(i,1))+')','fontsize',6,'FontName', 'Times New Roman','FontAngle','italic');
     else
     %cmap=hsv(256);
     %rand_color_F=randperm(255);
@@ -77,7 +69,7 @@ while i<=28%numtotal_item %产品总个??
          rand_color_f=rand_color_F(1,1);
          rectangle('Position',[data(i,2),data(i,1),data(i,4),data(i,3)],'LineWidth',0.5,'FaceColor',cmap(rand_color_f,:));
          plot(data(i,2),data(i,1),'K-o','MarkerFaceColor','K','MarkerSize',3);
-         text(data(i,2)+30,data(i,1)+20,'Item'+number(i,3)+'('+num2str(data(i,2))+','+num2str(data(i,1))+')'+num2str(data(i,4))+'mm*'+num2str(data(i,3))+'mm','fontsize',9,'FontName', 'Times New Roman','FontAngle','italic');
+         text(data(i,2)+30,data(i,1)+20,1,'Item'+number(i,3)+'('+num2str(data(i,2))+','+num2str(data(i,1))+')','fontsize',9,'FontName', 'Times New Roman','FontAngle','italic');
          else
          rectangle('Position',[data(i,2),data(i,1),data(i,4),data(i,3)],'LineWidth',0.2,'EdgeColor','k','LineStyle',':');
          end
@@ -87,7 +79,6 @@ while i<=28%numtotal_item %产品总个??
     end
     end
 
-   
     hold off;
     %saveas(gca,content+picture,'png');
     print(content+picture,'-dpng');
