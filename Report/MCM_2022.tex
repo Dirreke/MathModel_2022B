@@ -25,10 +25,10 @@
 针对该题目数据集，在大量数据和复杂优化的情况下，该算法仍然可以保证针每个数据集计算时间不超过\textbf{20minutes}，在较好情况计算时间不超过\textbf{10minutes}。该题目中得到5套组批及排样优化方案的材利用率分别为\textbf{79.23\%、77.66\%、77.94\%、78.17\%、76.59\%}，原始板材使用个数分别为\textbf{3759、2481、2481、2597、4034}片。
 
 最后，本文还对模型及算法进行分析评估，给出完整的程序源码及注释。并在附件中给出了两个问题所有原始板材的排版结果\textbf{效果图}。
-\textbf{有限降序首次适应算法}和\textbf{优先搜索}等
+% \textbf{有限降序首次适应算法}和\textbf{优先搜索}等
 
-通过等贪心算法,同时对模型及算法的合理性、时间复杂度、运行时间进行分析
-\keywords{混合整数规划;有限降序首次适应算法;贪心算法;优先搜索;粒子群算法;Bottom-Left;}
+% 通过等贪心算法,同时对模型及算法的合理性、时间复杂度、运行时间进行分析   粒子群算法;
+\keywords{大规模混合整数规划;有限降序首次适应算法;贪心算法;优先搜索;Bottom-Left;}
 \end{abstract}
 
 %\pagestyle{plain}
@@ -123,7 +123,7 @@
   \hline
 \end{longtable}
 }
-\newpage
+
 \setcounter{table}{0}
 \section{问题一排样优化}
 
@@ -133,7 +133,7 @@
 
 \textbf{三阶段2BP问题} \quad 这是一个三阶段二维装箱问题（two-dimensional  {\rm Bin} packing，2BP），我们有一批n个矩形的产品项，它们的高度是$h_i$和$w_i$，$i=1,...,n$，目标是将它们包装成数量最小的箱子，在本问题中箱子即指板材。可行解决方案由一组板材组成，每个板材由一组条带组成，每个条带由一组栈组成，每个栈由一组宽度（或长度）相同的产品项组成。
 
-\textbf{标准排样形式} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含产品项的移动并不改变此板材的可利用面积，故不改变整体的板材使用方案及数量。为规范问题分析与求解，我们通过将每个产品项移动到板材最左边和最下面的位置，形成所谓的排样标准形式，示例见图1。在后续问题讨论中，我们只考虑标准形式排样。
+\textbf{标准排样形式} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含产品项的移动并不改变此板材的可利用面积，故不改变整体的板材使用方案及数量。为规范问题分析与求解，通过将每个产品项移动到板材最左边和最下面的位置，形成所谓的排样标准形式，示例见图1。在后续问题讨论中，本文仅考虑标准形式排样。
 
 \begin{figure}[!htbp]
     \centering
@@ -145,19 +145,18 @@
 \subsection{模型建立}
 
 \subsubsection{方向说明}
-为便于后续讨论，规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}、图\ref{方向说明2}，与之垂直的板材原片的边的长度规定为板材原片的高度$H$，平行的边的长度规定为板材原片的长度$W$。
+为便于后续讨论，规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}，与之垂直的板材原片的边的长度规定为板材原片的高度$H$，平行的边的长度规定为板材原片的长度$W$。
 \begin{figure}[!htbp]
     \centering
     \begin{minipage}{0.48\linewidth}
         \centering
         \includegraphics[width=.9\textwidth]{方向说明1.png}
-        \caption{排布方案方向一}\label{方向说明1}
     \end{minipage}
     \begin{minipage}{0.48\linewidth}
         \centering
         \includegraphics[width=.9\textwidth]{方向说明2.png}
-        \caption{排布方案方向二}\label{方向说明2}
     \end{minipage}
+    \caption{原始板材切割示意图}\label{方向说明1}
 \end{figure}
 
 \subsubsection{编号规则}
@@ -267,7 +266,7 @@
     \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \label{板材高度}
 \end{equation}
 
-根据决策变量的定义(\ref{决策变量定义a})、定义(\ref{决策变量定义r})，设置辅助变量的值：
+根据决策变量的定义式(\ref{决策变量定义a})、式(\ref{决策变量定义r})，设置辅助变量的值：
 \begin{equation}
     a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \label{决策变量相关}
 \end{equation}
@@ -308,10 +307,10 @@
             \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \\
             a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \\
            \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \\
-            a_{j,i} \in {0,1}, \quad j=1,...,n , \quad i=j,...,n \\
-            b_{k,j} \in {0,1}, \quad k=1,...,n , \quad j=1,...,n \\
-            r_{l,k} \in {0,1}, \quad l=1,...,n , \quad k=l,...,n \\
-            \delta_{l,i,j} \in {0,1}, \quad j=1,...,n-1 , \quad i=l+1,...,n 
+            a_{j,i} \in \{0,1\}, \quad j=1,...,n , \quad i=j,...,n \\
+            b_{k,j} \in \{0,1\}, \quad k=1,...,n , \quad j=1,...,n \\
+            r_{l,k} \in \{0,1\}, \quad l=1,...,n , \quad k=l,...,n \\
+            \delta_{l,i,j} \in \{0,1\}, \quad j=1,...,n-1 , \quad i=l+1,...,n 
         \end{cases}  \label{问题一模型}
     \end{cases}
 \end{equation}
@@ -377,14 +376,7 @@
 	
 	针对方形件排样问题所提出的FFFD算法，是在首次拟合原则的基础上，加上了产品项降序排序及有限次步骤限制，因此理论上FFFD算法可以得到问题的最优解。
 	
-	\textbf{可解性}  
-	
-	FFFD算法为有限实现算法，表现为算法在有限步骤内可求得解，因为对产品项有序表遍历，总会实现产品项的放入，无论是直接放入还是新建一个板材再放入。且由算法逻辑可见，程序只有简单的遍历与判断，编写实现难度低。
-	
-	\textbf{复杂度估计}
-	
-	一般情况下两个外部循环一起在O(n)复杂度运行，两个内循环的最坏运行时间为 $ O(n^2) $，因此FFFD算法的最坏时间复杂度为 $ O(n^3) $。
-	
+
 	
 \subsubsection{启发式算法}
 
@@ -411,23 +403,29 @@
 	
 	以数据集AX所求得X号板材的排样方案效果图如图X所示，其余排样方案效果图详见附录。
 	
-\subsection{模型及算法评价}
+\subsection{算法及效果评价}
+
+\subsubsection{复杂度指标评价}  
+
+经计算，FFFD算法程序空间复杂度为$O(n)$，最好时间复杂度为$O(n)$，最坏时间复杂度为 $ O(n^2) $。FFFD算法为有限实现算法，表现为算法在有限步骤内可求得解。该算法逻辑简单，复杂度低，计算效果好，因此，在实际应用中，FFFD算法作为方形件排料优化的计算方法。
+
 
 \subsubsection{求解有效性}
 	
 	以数据集dataA1为例，由FFFD算法求得的板材数为88，与以下两个数据对比：
 	
-	\textbf{理论最少值} \quad 所有产品项的面积和为 $ S_{items} = 248685614.55 mm^2 $，若可以随意切割、拼接，则需要的板材数为: $ S_{items}/H/W = 248685614.55/2440/1200 = 83.54 $
+	\textbf{理想最少值} \quad 假定原始板材可以随意切割、拼接的情况下，即此时所需原始板材的数量仅和原始板材与产品项的形状无关。 所有产品项的面积和为 $ S_{items} = 248685614.55 mm^2 $，若可以随意切割、拼接，则需要的板材数为: $ S_{items}/H/W = 248685614.55/2440/1200 = 83.54 $
 	
 	\textbf{商用排样软件} \quad 将板材原件规格和数据集A1的产品项信息输入某商用专业板材优化软件，得到不考虑三阶段一刀切约束下的最优板材数为86
 	
 	而问题一相比上述两个场景，多了严格的切割约束，FFFD算法求得的结果仅多个别板材数，由此可见，FFFD算法具有较好的求解有效性。
+
 	
 \subsubsection{运行时间}
 	 
 	数据集A1~A4的产品项规模在800左右，算法求解平均耗时在200毫秒左右，运行速度角度。且FFFD算法总是在有限步内求得可行解，故运行时间理论上较快。
 		
-	
+
 
 \section{问题二订单组批}
 
@@ -464,29 +462,34 @@
 
 该目标函数中，函数$f_q$可利用问题一模型求解，函数$f_q$的优化求解问题，即为该组批优化的内层优化问题。
 
-等式约束(\ref{订单必须排})保证所有的订单$p$被批次$q$包含且仅包含1次。
+为保证所有的订单$p$被批次$q$包含且仅包含1次，有
 
 \begin{equation}   
     \sum_{q=1}^{p} d_{q,p}=1,\quad \forall p\le m,p \in \mathbb{N}^+ \label{订单必须排} 
 \end{equation}
 
 
-在$d_{q,p}$的编号原则约定下，不等式约束\ref{编号原则2}保证订单$p$仅分配给非空的批次$q$。
+在$d_{q,p}$的编号原则约定下，需要保证订单$p$仅分配给非空的批次$q$，故有
 
 \begin{equation}   
 \sum_{p=q}^{m} d_{q,p} \le (m-q+1)d_{q,q},\quad \forall q\le m,q\in \mathbb{N}^+\label{编号原则2}
 \end{equation}
 
-\textbf{定义}$n_p$为订单p所包含的产品项个数，为保证加工环节快速流转，每个批次产品项（item）总数不能超过限定值，则有
+定义$N_p$为订单p所包含的产品项个数，为保证加工环节快速流转，每个批次产品项总数不能超过限定值，则有
 
 \begin{equation}   
-    \sum_{p=q}^{m} n_pd_{q,p} \le \text{max\_item\_num},\quad \forall q \le m, q\in \mathbb{N}^+
+    \sum_{p=q}^{m} N_pd_{q,p} \le \text{max\_item\_num},\quad \forall q \le m, q\in \mathbb{N}^+
 \end{equation}
 
-\textbf{定义}$S_p$为订单p所包含的产品项总面积，因工厂产能限制，每个批次产品项（item）的面积总和不能超过限定值，所以有
+定义$S_p$为订单p所包含的产品项总面积，因工厂产能限制，每个批次产品项的面积总和不能超过限定值，所以有
 
 \begin{equation}   
-    \sum_{p=q}^{m} S_pd_{q,p} le max\_item\_area,\quad \forall q\le m,q\in \mathbb{N}^+
+    \sum_{p=q}^{m} S_pd_{q,p} \le \text{max\_item\_area},\quad \forall q\le m,q\in \mathbb{N}^+
+\end{equation}
+
+决策变量的取值范围:
+\begin{equation}
+    d_{q,p} \in \{0,1\},  \forall p,q,\quad,q\le p \le m,  p,q\in \mathbb{N}^+
 \end{equation}
 
 因此，可以得到混合整数非线性规划模型
@@ -499,6 +502,7 @@
             \sum_{p=q}^{m} d_{q,p} \le (m-q+1)d_{q,q},\quad \forall q\le m,q\in \mathbb{N}^+  \\
             \sum_{p=q}^{m} n_pd_{q,p} \le \text{max\_item\_num},\quad \forall q \le m, q\in \mathbb{N}^+\\
             \sum_{p=q}^{m} S_pd_{q,p} le max\_item\_area,\quad \forall q\le m,q\in \mathbb{N}^+ \\
+            d_{q,p} \in \{0,1\}, \forall p,q,\quad,q\le p \le m,  p,q\in \mathbb{N}^+\\
         \end{cases}  \label{问题二模型}
     \end{cases}
 \end{equation}
@@ -540,22 +544,10 @@
 
 
 \subsubsection{优先搜索算法步骤}
-1）假定在所有订单中材质$t$的产品项有且仅有2个，分别被2组订单$\text{Order}_1$、$\text{Order}_2$包含，且两个产品项可排样在1块原始板材上。
 
-显然，当且仅当这2组订单被组合到同一批次中，该材质所使用的原始板材数量才会减少。如果2组订单被分配到不同的批次中，则该材质的板材利用率不会再提高。
+1) 初始化订单$p$的生产批次为第$q$($q=p$)批。
 
-2）相反地，对于数量更多的材质$t'$，其被订单$p'$等大批量组订单所包含。
-
-此时，如若出现与1）中相同的情况，其中两个或几个订单被分配到不同批次。仍然会有其他可选批次与订单$p'$组合，并提高其板材利用率。而且由于其产品项数量多、形状多，在排样时可选方案也更多，该类材质往往能有较高的板材利用率。
-
-接下来讨论一般问题
-
-
-
-\subsubsection{优先搜索算法}
-1) 初始化订单$p$的生产批次为第$q=p$批。
-
-2) 对每种材质全部产品项进行排样，并按照其所需的排序，排在前位的材质中的批次，合并为一个批次的优先级更高。
+2) 对每种材质全部产品项进行排样，并按照包含该种材质的批次数量升序排列，当包含该种材质的批次数量一致时，按照该种材质全部产品项排样所需的原始板材的数量升序排列。排在前位的材质中的批次，具有更高的组合优先级。
 
 3) 按照第2）步形成的材质顺序进行搜索，对于材质t，如果包含材质t的批次不少于2个，则考虑其任意2个批次合并后，是否可以有效的减少该材质t的原始板材使用数量。
 
@@ -567,24 +559,24 @@
 
 7) 此时的订单组批方案中，并非所有批次都接近单个批次产品项总数上限或面积总和上限，其小规模的批次仍完成可进一步合并，以减少批次数量。然而，考虑到此种合并不会进一步提高板材利用率，与本文的优化目标无关，且这种组合方法可以较易实现，因此，本文不再考虑对批次的进一步合并的问题。
 
-算法\ref{test}
-\begin{algorithm}
-    % \SetAlgoNoLine
-    \caption{Put your caption here}\label{test}
-    \begin{multicols}{2}
-        \SetAlgoLined
-        \KwData{this text}
-        KwResult{how to write algorithm with \LaTeX2e }
-        initialization\;
-        \While{not at end of this document}{read current\;
-        \eIf{understand}
-        {go to next section\;current section becomes this one\;
-        }{
-        go back to the beginning of current section\;
-        }
-        }
-    \end{multicols}
-\end{algorithm}
+% 算法\ref{test}
+% \begin{algorithm}
+%     % \SetAlgoNoLine
+%     \caption{Put your caption here}\label{test}
+%     \begin{multicols}{2}
+%         \SetAlgoLined
+%         \KwData{this text}
+%         KwResult{how to write algorithm with \LaTeX2e }
+%         initialization\;
+%         \While{not at end of this document}{read current\;
+%         \eIf{understand}
+%         {go to next section\;current section becomes this one\;
+%         }{
+%         go back to the beginning of current section\;
+%         }
+%         }
+%     \end{multicols}
+% \end{algorithm}
 
 \subsection{求解结果}
 
@@ -602,15 +594,33 @@
          求解耗时（s）&0&0&0&0&0\\ \hline
          
         \end{tabular}
-        \end{table}
-    
-		
-	数据集           B1            B2            B3           B4           B5
-	利用率        0.79231       0.77665       0.77942        0.78172      0.76591
-    板材总数	      3759          2481           2620         2597         4034
-	求解耗时（s）
+    \end{table}
 
-	所得利用率在 76\% \~ 80\% 之间，相比问题一较低，这主要由于同一订单的产品项必须在相同批次，而材质不同的产品项无法排样在同一块板材原件上所导致。由输出结果所得各组批的排样图分析可见，在此组批约束下，此排样结果已相对较优。各组批方案详见附录。
+    所得利用率在 76\% \~ 80\% 之间，相比问题一较低，这主要由于同一订单的产品项必须在相同批次，而材质不同的产品项无法排样在同一块板材原件上所导致。由输出结果所得各组批的排样图分析可见，在此组批约束下，此排样结果已相对较优。各组批方案详见附录。
+
+\subsection{算法及效果评价}
+
+\subsubsection{复杂度指标评价}  
+
+经计算，优先搜索算法程序空间复杂度为$O(n)$，最好时间复杂度为$O(n)$，最坏时间复杂度为 $ O(n^2) $。FFFD算法为有限实现算法，表现为算法在有限步骤内可求得解。该算法逻辑简单，复杂度低，计算效果好，因此，在实际应用中，FFFD算法作为方形件排料优化的计算方法。
+
+	
+\subsubsection{运行时间}
+	 
+	数据集B1~B5的产品项规模在20000-30000左右，算法求解平均耗时在20minutes左右。对于该大规模深度耦合复杂程度问题，此求解时间速度快，效果好，
+		
+\subsubsection{求解有效性}
+
+以数据集dataB1为例，由优先搜索算法求得的板材数为3759，与以下理想数据对比：
+
+\textbf{理想最少值} \quad 假定原始板材可以随意切割、拼接的情况下，即此时所需原始板材的数量仅和原始板材与产品项的形状无关，仅与面积有关。此时，将所有产品放入同一个批次，按照每个材质所有产品项的面积和$S_t$，与原始板材的面积$S_0$对比，得到在可以随意切割、拼接的情况下，需要的板材数为3051片。
+
+\textbf{忽略数量及面积约束} \quad 忽略产品项数量及面积约束，将所有产品放入同一个批次，同时加工，利用问题一DDDF方法对此批材料排样，可得此时最优排样方案需要原始板材3335片。
+
+
+而问题二相比上述两个场景，多了严格的切割约束或产品项数量及面积约束，FFFD算法求得的结果仅增加少量原始板材数，由此可见，优先搜索算法的求解有效性。
+
+
 
 \section{模型评价与展望}
 

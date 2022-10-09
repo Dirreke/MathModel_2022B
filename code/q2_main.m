@@ -23,3 +23,17 @@ parfor k = 1:length(file)
 %     draw_picture_fun(1, k);
     fprintf("数据集dataB%d的最优组批排样策略的板材利用率为%.2f\n ",k,100*ratios(k));
 end
+% %% 
+% [data_ori, material_index] = data_pre_fun(file(1));
+
+% width = 1220;
+% height = 2440;
+% material = unique(data_ori(:,9));
+% num_plates = 0;
+% for k  = 1:length(material)
+%     i = material(k);
+%     num_plate = ceil(sum(data_ori(data_ori(:,9) == i,5))/width/height);
+    
+%     num_plates = num_plates + num_plate;
+    
+% end
