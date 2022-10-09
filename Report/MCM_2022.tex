@@ -59,6 +59,9 @@
 
 \quad
 
+
+\newpage
+
 \section{符号说明}
 
 {\centering
@@ -93,7 +96,12 @@
   13 & $W$          & 板材原片的宽度（单位：mm） \\ 
   14 & $a_{j,i}$    & 标志$ {\rm Stack}_j$是否包含$ {\rm Item}_i$的0-1变量  	&\quad   \\  
   15 & $b_{k,j}$    & 标志$ {\rm Stripe}_k$是否包含$ {\rm Stack}_j$的0-1变量 	&\quad   \\  
-  16 & $r_{l,k}$    & 标志$ {\rm Bin}_l$是否包含$ {\rm Stripe}_k$的0-1变量  	&\quad   \\  \hline
+  16 & $r_{l,k}$    & 标志$ {\rm Bin}_l$是否包含$ {\rm Stripe}_k$的0-1变量  	&\quad   \\  
+  17 & $\delta_{l,i,j}$  &表征产品项、栈、条带、板材之间关系的0-1辅助变量  &\quad \\
+  18 & $d_{q,p}$     &标志$ {\rm Batch}_q$是否包含$ {\rm Order}_p$的0-1变量    &\quad \\
+  19 & \text{max\_item\_num}  & 单个批次产品项总数上限 &\quad \\
+  20 & \text{max\_item\_area} & 单个批次产品项总和上限 &\quad \\
+  \hline
 \end{longtable}
 }
 \newpage
@@ -190,41 +198,36 @@
 
 
 
-目标函数(\ref{目标函数})是最小化所使用的板材数量，如4.1节中的问题分析，此目标与题意中的尽可能减少板材用量等价，且更为简洁直观、便于计算。当$ r_{l,l}=1 $时表示板材$l$被使用，故（\ref{目标函数}）式即为此方案所用的板材总数。
+优化目标是最小化所使用的板材数量，如4.1节中的问题分析，此目标与题意中的尽可能减少板材用量等价，且更为简洁直观、便于计算。当$ r_{l,l}=1 $时表示板材$l$被使用，则目标函数可如下表示：
 \begin{equation}
     min \sum_{l=1}^{n}  r_{l,l} \label{目标函数}
  \end{equation}
 
 
-等式约束（\ref{产品项必须排}）保证每个产品项$i$必须被排样一次。
+根据前述分析，该优化问题涉及变量存在相应约束条件，每个产品项$i$在且仅在一块板材中出现：
 
 \begin{equation}
     \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \label{产品项必须排}
 \end{equation}
 
 
-等式约束（\ref{产品项必须排}）保证每个产品项$i$必须被排样一次。
-\begin{equation}
-    \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \label{产品项必须排}
-\end{equation}
-
-不等式约束（\ref{产品项只给已使用栈}）确保产品项只会被分配给已使用的栈$j$。
+产品项只会被分配给已使用的栈：
 
 \begin{equation}
-   \sum_{i=j+1}^{n}  a_{j,i} \le (n-j)a_{j,j},\quad \forall j=1,...,n-1  \label{产品项只给已使用栈}
+   \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j=1,...,n  \label{产品项只给已使用栈}
 \end{equation}
 
-等式约束(\ref{相同宽度})保证了排样在同一栈中的产品项必须具有相同的宽度，并且任何一个栈中的产品项的总高度不得超过板材高度$H$。
+排样在同一栈中的产品项必须具有相同的宽度，并且任何一个栈中的产品项的总高度不得超过板材高度$H$：
 \begin{equation}
      a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H \label{相同宽度}
  \end{equation}
 
- 等式约束(\ref{栈精确排在条带})保证每个已使用的栈$j$，被准确排样在条带$j$中。
+已使用的栈$j$在且仅在一条条带$j$中：
 \begin{equation}
     \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \label{栈精确排在条带}
 \end{equation}
 
-不等式约束(\ref{严格小于的高度限制})-(\ref{小于等于的高度限制})确保每个栈 $j$的高度不会超过它所在的条带 $k$ 的高度。此约束规则被拆分为“严格小于”和“小于等于”两个式子，以避免栈高度相同时出现歧义。
+每个栈 $j$的高度不超过所在条带 $k$ 的高度，考虑栈高度可能相同的情况，按照“严格小于”和“小于等于”两张情况予以区分：
 \begin{equation}
     \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \label{严格小于的高度限制}
 \end{equation}
@@ -232,53 +235,53 @@
     \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad  \forall k=1,...,n-1, \quad \forall j=k+1,...,n \label{小于等于的高度限制}
 \end{equation}
 
-不等式约束(\ref{宽度限制})确保条带的宽度不超过箱子的宽度，且没有栈被排样进未使用的条带中。
+条带的宽度不超过箱子的宽度，且栈只会被分配给已使用的条带中：
 \begin{equation}
     \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k=1,...,n \label{宽度限制}
 \end{equation}
 
-等式约束(\ref{条带精准打包})保证每个已使用的条带被准确打包到板材中。
+每个已使用的条带在且仅在一块板材中：
 \begin{equation}
     \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k=1,...,n \label{条带精准打包}
 \end{equation}
 
-不等式约束(\ref{板材高度})确保每个板材的高度大于等于所含条带的总高度。
+一块板材上条带的总高度不超过板材的高度：
 \begin{equation}
     \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \label{板材高度}
 \end{equation}
 
-不等式约束(\ref{决策变量相关})根据决策变量的定义(\ref{决策变量定义a})、定义(\ref{决策变量定义r})设置其值。
+根据决策变量的定义(\ref{决策变量定义a})、定义(\ref{决策变量定义r})，设置辅助变量的值：
 \begin{equation}
     a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \label{决策变量相关}
 \end{equation}
 
-不等式约束(\ref{未使用板材无条带})确保没有条带被排样进未使用的板材中。
+条带只会分配给已使用的板材：
 \begin{equation}
     \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \label{未使用板材无条带}
 \end{equation}
 
-公式(\ref{范围a})-(\ref{范围delta})为变量的范围，所有变量均为0-1整数型变量。
+公式(\ref{范围a})-(\ref{范围delta})为变量的范围，所有变量均为0-1整数型变量：
 \begin{equation}
-    a_{j,i} \in {0,1}, \quad j=1,...,n , \quad i=j,...,n \label{范围a}
+    a_{j,i} \in \{0,1\}, \quad j=1,...,n , \quad i=j,...,n \label{范围a}
 \end{equation}
 \begin{equation}
-    b_{k,j} \in {0,1}, \quad k=1,...,n , \quad j=1,...,n \label{范围b}
+    b_{k,j} \in \{0,1\}, \quad k=1,...,n , \quad j=1,...,n \label{范围b}
 \end{equation}
 \begin{equation}
-    r_{l,k} \in {0,1}, \quad l=1,...,n , \quad k=l,...,n \label{范围r}
+    r_{l,k} \in \{0,1\}, \quad l=1,...,n , \quad k=l,...,n \label{范围r}
 \end{equation}
 \begin{equation}
-    \delta_{l,i,j} \in {0,1}, \quad j=1,...,n-1 , \quad i=l+1,...,n \label{范围delta}
+    \delta_{l,i,j} \in \{0,1\}, \quad j=1,...,n-1 , \quad i=l+1,...,n \label{范围delta}
 \end{equation}
 
-完整的问题一的\textbf{三阶段2BP二进制整数线性规划模型}如下所示。
+完整的问题一的\textbf{三阶段2BP二进制整数线性规划模型}如下所示：
 \begin{equation}
     \begin{cases}
         min \sum_{l=1}^{n}  r_{l,l} \\
         s.t.
         \begin{cases}
             \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \\
-            \sum_{i=j+1}^{n}  a_{j,i} \le (n-j)a_{j,j},\quad \forall j=1,...,n-1  \\
+            \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j=1,...,n  \\
             a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H\\
             \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \\
             \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \\
