@@ -17,135 +17,157 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [gBest,gBestScore,ConvergenceCurve]=BPSO(noP,Max_iteration,BPSO_num,CostFunction,noV,x0)
+function [gBest, gBestScore, ConvergenceCurve] = BPSO(noP, Max_iteration, BPSO_num, CostFunction, noV, x0)
 
 %Initial Parameters for PSO
-w=2;              %Inirtia weight
-wMax=0.9;         %Max inirtia weight
-wMin=0.4;         %Min inirtia weight
-c1=2;
-c2=2;
-Vmax=20;
+w = 2; %Inirtia weight
+wMax = 0.9; %Max inirtia weight
+wMin = 0.4; %Min inirtia weight
+c1 = 2;
+c2 = 2;
+Vmax = 20;
 
-Velocity=zeros(noP,noV);%Velocity vector
+Velocity = zeros(noP, noV); %Velocity vector
+
 if nargin < 6
-    Position=zeros(noP,noV);%Position vector
+    Position = zeros(noP, noV); %Position vector
     %Initialization
-    for i=1:size(Position,1) % For each particle
-        for j=1:size(Position,2) % For each variable
-            if rand<=0.5
-                Position(i,j)=0;
+    for i = 1:size(Position, 1) % For each particle
+        
+        for j = 1:size(Position, 2) % For each variable
+            
+            if rand <= 0.5
+                Position(i, j) = 0;
             else
-                Position(i,j)=1;
+                Position(i, j) = 1;
             end
+            
         end
+        
     end
-    for i=1:noP
-        pBestScore(i)=inf;
+    
+    for i = 1:noP
+        pBestScore(i) = inf;
     end
+    
 else
-    [tmp_x,tmp_y] = size(x0);
+    [tmp_x, tmp_y] = size(x0);
+    
     if tmp_x ~= noP || tmp_y ~= noV
         warning("1");
     else
         Position = x0;
     end
+    
     %Initialization
-    for i=1:noP
-        pBestScore(i)=CostFunction(Position(i,:),0);
+    for i = 1:noP
+        pBestScore(i) = CostFunction(Position(i, :), 0);
     end
-
+    
 end
 
-%////////Cognitive component///////// 
-pBestScore=zeros(noP);
-pBest=zeros(noP,noV);
+%////////Cognitive component/////////
+pBestScore = zeros(noP);
+pBest = zeros(noP, noV);
 %////////////////////////////////////
 
 %////////Social component///////////
-gBestScore=inf;
-gBest=zeros(1,noV);
+gBestScore = inf;
+gBest = zeros(1, noV);
 %///////////////////////////////////
 
-ConvergenceCurve=zeros(1,Max_iteration); %Convergence vector
+ConvergenceCurve = zeros(1, Max_iteration); %Convergence vector
 
-
-
-for l=1:Max_iteration
+for l = 1:Max_iteration
     l
     %Calculate cost for each particle
-    for i=1:size(Position,1)  
-        fitness=CostFunction(Position(i,:),l);
+    for i = 1:size(Position, 1)
+        fitness = CostFunction(Position(i, :), l);
         
-        if(pBestScore(i)>fitness)
-            pBestScore(i)=fitness;
-            pBest(i,:)=Position(i,:);
+        if (pBestScore(i) > fitness)
+            pBestScore(i) = fitness;
+            pBest(i, :) = Position(i, :);
         end
-        if(gBestScore>fitness)
-            gBestScore=fitness;
-            gBest=Position(i,:);
+        
+        if (gBestScore > fitness)
+            gBestScore = fitness;
+            gBest = Position(i, :);
         end
+        
     end
-
+    
     %update the W of PSO
-    w=wMax-l*((wMax-wMin)/Max_iteration);
+    w = wMax - l * ((wMax - wMin) / Max_iteration);
     %Update the Velocity and Position of particles
-    for i=1:size(Position,1)
-        for j=1:size(Position,2) 
+    for i = 1:size(Position, 1)
+        
+        for j = 1:size(Position, 2)
             %Equation (1)
-            Velocity(i,j)=w*Velocity(i,j)+c1*rand()*(pBest(i,j)-Position(i,j))+c2*rand()*(gBest(j)-Position(i,j));
+            Velocity(i, j) = w * Velocity(i, j) + c1 * rand() * (pBest(i, j) - Position(i, j)) + c2 * rand() * (gBest(j) - Position(i, j));
             
-            if(Velocity(i,j)>Vmax)
-                Velocity(i,j)=Vmax;
+            if (Velocity(i, j) > Vmax)
+                Velocity(i, j) = Vmax;
             end
-            if(Velocity(i,j)<-Vmax)
-                Velocity(i,j)=-Vmax;
-            end  
             
-            if BPSO_num==1
-                s=1/(1+exp(-2*Velocity(i,j))); %S1 transfer function
+            if (Velocity(i, j) <- Vmax)
+                Velocity(i, j) = -Vmax;
             end
-            if BPSO_num==2
-                s=1/(1+exp(-Velocity(i,j)));   %S2 transfer function              
-            end
-            if BPSO_num==3
-                s=1/(1+exp(-Velocity(i,j)/2)); %S3 transfer function              
-            end
-            if BPSO_num==4
-               s=1/(1+exp(-Velocity(i,j)/3));  %S4 transfer function
-            end            
             
-            if BPSO_num<=4 %S-shaped transfer functions
-                if rand<s % Equation (4) and (8)
-                    Position(i,j)=1;
+            if BPSO_num == 1
+                s = 1 / (1 + exp(-2 * Velocity(i, j))); %S1 transfer function
+            end
+            
+            if BPSO_num == 2
+                s = 1 / (1 + exp(-Velocity(i, j))); %S2 transfer function
+            end
+            
+            if BPSO_num == 3
+                s = 1 / (1 + exp(-Velocity(i, j) / 2)); %S3 transfer function
+            end
+            
+            if BPSO_num == 4
+                s = 1 / (1 + exp(-Velocity(i, j) / 3)); %S4 transfer function
+            end
+            
+            if BPSO_num <= 4 %S-shaped transfer functions
+                
+                if rand < s % Equation (4) and (8)
+                    Position(i, j) = 1;
                 else
-                    Position(i,j)=0;
+                    Position(i, j) = 0;
                 end
+                
             end
             
-            if BPSO_num==5
-                s=abs(erf(((sqrt(pi)/2)*Velocity(i,j)))); %V1 transfer function
-            end            
-            if BPSO_num==6
-                s=abs(tanh(Velocity(i,j))); %V2 transfer function
-            end            
-            if BPSO_num==7
-                s=abs(Velocity(i,j)/sqrt((1+Velocity(i,j)^2))); %V3 transfer function
-            end            
-            if BPSO_num==8
-                s=abs((2/pi)*atan((pi/2)*Velocity(i,j))); %V4 transfer function (VPSO)         
+            if BPSO_num == 5
+                s = abs(erf(((sqrt(pi) / 2) * Velocity(i, j)))); %V1 transfer function
             end
             
-            if BPSO_num>4 && BPSO_num<=8 %V-shaped transfer functions
-                if rand<s %Equation (10)
-                    Position(i,j)=~Position(i,j); 
-                end
+            if BPSO_num == 6
+                s = abs(tanh(Velocity(i, j))); %V2 transfer function
             end
+            
+            if BPSO_num == 7
+                s = abs(Velocity(i, j) / sqrt((1 + Velocity(i, j)^2))); %V3 transfer function
+            end
+            
+            if BPSO_num == 8
+                s = abs((2 / pi) * atan((pi / 2) * Velocity(i, j))); %V4 transfer function (VPSO)
+            end
+            
+            if BPSO_num > 4 && BPSO_num <= 8 %V-shaped transfer functions
+                
+                if rand < s %Equation (10)
+                    Position(i, j) = ~Position(i, j);
+                end
+                
+            end
+            
         end
+        
     end
-    ConvergenceCurve(l)=gBestScore;
+    
+    ConvergenceCurve(l) = gBestScore;
 end
+
 end
-
-
-
