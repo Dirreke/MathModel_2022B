@@ -60,14 +60,15 @@
 \quad
 
 \section{符号说明}
+
 {\centering
 % \begin{longtable}{cccc}
 
 % \end{longtable}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
-
+   
 \begin{longtable}{cccc}
-
+   
  \toprule
   \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ 
   \midrule
@@ -96,7 +97,7 @@
 \end{longtable}
 }
 \newpage
-
+\setcounter{table}{0}
 \section{问题一排样优化}
 
 \subsection{问题分析}
@@ -106,6 +107,12 @@
 \textbf{三阶段2BP问题} \quad 这是一个三阶段二维装箱问题（two-dimensional  {\rm Bin} packing，2BP），我们有一批n个矩形的产品项，它们的高度是$h_i$和$w_i$，$i=1,...,n$，目标是将它们包装成数量最小的箱子，在本问题中箱子即指板材。可行解决方案由一组板材组成，每个板材由一组条带组成，每个条带由一组栈组成，每个栈由一组宽度（或长度）相同的产品项组成。
 
 \textbf{标准排样形式} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含产品项的移动并不改变此板材的可利用面积，故不改变整体的板材使用方案及数量。为规范问题分析与求解，我们通过将每个产品项移动到板材最左边和最下面的位置，形成所谓的排样标准形式，示例见图1。在后续问题讨论中，我们只考虑标准形式排样。
+
+\begin{figure}[!htbp]
+    \centering
+        \includegraphics[width=.4\textwidth]{左下角优先排布说明.png}
+        \caption{排布顺序示意图} \label{左下角优先排布说明}
+\end{figure}
 
 
 \textbf{板材及各组成的编号规则} \quad 对于某一可行解决方案，其使用板材数量及排样方案确定，任一板材中所含条带的顺序改变、任一条带中栈的顺序改变、或任一栈中产品项的顺序改变，均不会改变此板材的可利用面积，故不改变整体的板材使用方案及数量。按照$h_1 \geq h_2 \geq ...\geq h_n$的顺序，对产品项进行编号。一个可行解决方案最多包含$n$个栈，取栈所含的最高产品项编号作为此栈的编号，也即所含产品项的最小编号。在此编号规则下，对于栈$j$，可知它一定包含产品项$j$，且产品项$j$为高度最大的项，同时编号小于$j$的产品项均不在此栈中。故这样的编号规则可以给后续建模即计算带来较优的简化，例如变量数的减少。类似的，约定一个解决方案最多有$n$个条带，用条带所含栈中最高栈对应的编号，作为此条带的编号；一个解决方案最多需要$n$个板材，用板材所含条带中最高条带对应的编号，作为此板材的编号。
@@ -196,13 +203,13 @@
 \end{equation}
 
 
-
 等式约束（\ref{产品项必须排}）保证每个产品项$i$必须被排样一次。
 \begin{equation}
     \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \label{产品项必须排}
 \end{equation}
 
 不等式约束（\ref{产品项只给已使用栈}）确保产品项只会被分配给已使用的栈$j$。
+
 \begin{equation}
    \sum_{i=j+1}^{n}  a_{j,i} \le (n-j)a_{j,j},\quad \forall j=1,...,n-1  \label{产品项只给已使用栈}
 \end{equation}
@@ -478,15 +485,21 @@
 \subsection{求解结果}
 
 	运行FFFD算法对数据集A进行求解，800个左右产品项数量的数据集，0.2s左右即可计算完毕，得到结果如下：
-
-						表1：问题一 FFFD算法求解结果
-	数据集               A1            A2             A3            A4	
-	产品项总数           752           731            823           799
-	利用率             0.94933       0.93117       0.95147       0.94083
-	板材数               88            89             88            87
-	FFFD求解耗时（s）   0.18849       0.17247       0.21430       0.20128        
-
-	【注】：板材利用率 = 产品项面积之和 / 使用原片面积之和
+    
+    \begin{table}[htph]
+        \centering
+        \caption{问题一 FFFD算法求解结果}
+         \label{问题一 FFFD算法求解结果}
+        \begin{tabular}{ccccc}
+         \hline
+         \makebox[0.2\textwidth][c]{数据集}&\makebox[0.16\textwidth][c]{A1}&\makebox[0.16\textwidth][c]{A2}&\makebox[0.16\textwidth][c]{A3}&\makebox[0.16\textwidth][c]{A4}\\ \hline
+         产品项总数&752&731&823&799 \\ \hline
+         利用率 &0.94933&0.93117& 0.95147&0.94083 \\ \hline
+         板材数&88&89&88&87\\ \hline
+         FFFD求解耗时（s）&0.18849&0.17247&0.21430 &0.20128 \\ \hline 
+        \multicolumn{5}{l}{【注】：板材利用率 = 产品项面积之和 / 使用原片面积之和}\\
+        \end{tabular}
+        \end{table}
 	
 	所得利用率均在93\% 以上，表明FFFD算法获得了较为不错的结果。同时可求得各板材的产品项排样方案，见附录。
 	
