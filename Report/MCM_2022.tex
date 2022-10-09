@@ -1,6 +1,6 @@
 \documentclass[bwprint]{gmcmthesis}
 \usepackage[framemethod=TikZ]{mdframed}
-\title{高压油管稳定控压策略的研究}
+\title{方行件组批优化控策略研究}
 \baominghao{22103350008} %参赛队号
 \schoolname{浙江大学}%学校名称
 \membera{葛明阳} %队员A
@@ -14,8 +14,16 @@
 
  %填写摘要
 \begin{abstract}
-缺
-\keywords{混合整数线性规划;混合整数非线性规划;粒子群算法;FFF;贪婪;BL;优先搜索;}
+本文对方形件排样问题及订单组批问题建立\textbf{混合整数规划模型},通过\textbf{有限降序首次适应算法}和\textbf{优先搜索}等贪心算法，实现方形件排样优化排样和组批优化问题。针对题目数据集，得出完整的组批及排样方案，并以\textbf{数据表}、\textbf{效果图}等形式加以展示。最后，本文还将完整的算法的\textbf{合理性}、\textbf{时间复杂度}、\textbf{运行时间}进行分析讨论，并给出其程序源码。
+
+\textbf{针对问题1}，本文建立\textbf{混合整数线性规划模型}，其最佳时间复杂度为$O(n)$，最坏时间复杂度为$O(n^2)$，平均每个数据集计算时间不超过\textbf{200ms}。4个数据集排样优化方案板材利用率分别为\textbf{94.93\%、93.12\%、95.15\%、94.08\%}
+
+\textbf{针对问题2}，本文建立\textbf{混合整数非线性规划模型}，并构造适用于此问题的贪心算法：，其最佳时间复杂度为$O(n)$，最坏时间复杂度为$O(n^2)$，平均每个数据集计算时间不超过\textbf{200ms}。4个数据集排样优化方案板材利用率分别为\textbf{94.93\%、93.12\%、95.15\%、94.08\%}
+
+
+
+通过等贪心算法,同时对模型及算法的合理性、时间复杂度、运行时间进行分析
+\keywords{混合整数规划;有限降序首次适应算法;贪心算法;优先搜索;粒子群算法;BL;}
 \end{abstract}
 
 %\pagestyle{plain}
@@ -177,19 +185,18 @@
 \end{equation}
 
 \subsubsection{方向说明}
-为了便于后续讨论，本文规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}、图\ref{方向说明2}，与之垂直的板材原片的边的长度规定为板材原片的高度$H$，平行的边的长度规定为板材原片的长度$W$。
+为了便于后续讨论，本文规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}，与之垂直的板材原片的边的长度规定为板材原片的高度$H$，平行的边的长度规定为板材原片的长度$W$。
 \begin{figure}[!htbp]
     \centering
     \begin{minipage}{0.48\linewidth}
         \centering
         \includegraphics[width=.9\textwidth]{方向说明1.png}
-        \caption{排布方案方向一}\label{方向说明1}
     \end{minipage}
     \begin{minipage}{0.48\linewidth}
         \centering
-        \includegraphics[width=.9\textwidth]{方向说明2.png}
-        \caption{排布方案方向二}\label{方向说明2}
+        \includegraphics[width=.9\textwidth]{方向说明2.png}     
     \end{minipage}
+    \caption{原始板材切割示意图}\label{方向说明1}
 \end{figure}
 
 
@@ -475,7 +482,7 @@
 	
 	\textbf{复杂度估计}
 	
-	两个外部循环或处于有一个Item放置于内循环、或初始化一个新Bin的状态，故两个外部循环一起在O(n)复杂度运行。两个内循环的最坏运行时间为 $ O(n^2) $。因此FFFD算法的最坏时间复杂度为 $ O(n^3) $。
+	该FFFD算法的最好时间复杂度为$O(n)$，最坏时间复杂度为 $ O(n^2) $。
 	
 	\textbf{运行时间分析}
 	 
