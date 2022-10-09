@@ -28,7 +28,7 @@
 \textbf{有限降序首次适应算法}和\textbf{优先搜索}等
 
 通过等贪心算法,同时对模型及算法的合理性、时间复杂度、运行时间进行分析
-\keywords{混合整数规划;有限降序首次适应算法;贪心算法;优先搜索;粒子群算法;BL;}
+\keywords{混合整数规划;有限降序首次适应算法;贪心算法;优先搜索;粒子群算法;Bottom-Left;}
 \end{abstract}
 
 %\pagestyle{plain}
@@ -75,9 +75,7 @@
 \section{符号说明}
 
 {\centering
-% \begin{longtable}{cccc}
 
-% \end{longtable}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
    
 \begin{longtable}{cccc}
@@ -87,9 +85,20 @@
   \midrule
   \endfirsthead
 
+  \specialrule{0em}{0pt}{5.03pt}
+  \multicolumn{3}{r@{}}{(续)} \\
+  \specialrule{0em}{0pt}{5.03pt}
   \toprule
   \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ 
+  \hline
   \endhead
+
+  \bottomrule
+  \hline
+  \multicolumn{3}{r@{}}{(接下一页)}
+  \endfoot
+
+  \endlastfoot
 
   1 & $n$            & 同一数据集下的产品项总个数      \\ 
   2 & $i$            & 产品项编号（$i\le n,i \in \mathbb{N}^+$）      \\ 
