@@ -84,7 +84,7 @@ for k = 1:size(orders_unique, 1)
     [material_packs,material_packs_ratio,material_packs_num_plates] = q2_FFF_fun(data, width, height, orders_unique(k));
     
     orders_now_id = orders_unique(k); %此批次对应的订单锁号
-    orders_id = data_ori(data(:, 8) == orders_now_id,8)'; %此批次包含的实际订单们
+    orders_id = unique(data_ori(data(:, 8) == orders_now_id,8))'; %此批次包含的实际订单们
     
     batch.id = k;
     batch.material_packs = material_packs;

@@ -36,7 +36,7 @@ for q = 1:num_batch
     for qq = 1:num_material_pack
         bins = batches(q).material_packs(qq).bins;
         
-        material_name = material_index(batches(q).material_packs(qq).material_name); % 原片材质
+        material_name = material_index(batches(q).material_packs(qq).material_id); % 原片材质
         num_bin = length(bins);
         
         for k = 1:num_bin
@@ -159,7 +159,7 @@ if data_type == 1
     fclose(fileID);
 elseif data_type == 2
     fileID = fopen("../result/result" + type + '/sum_order_' + type + file_id + '.csv', 'w+', 'n', 'GB2312');
-    fprintf(fileID, '%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '批次序号', '原片材质', '原片序号', '产品id', '产品x坐标', '产品y坐标', '产品x方向长度', '产品y方向长度', "是否为产品项");
+    fprintf(fileID, '%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '批次序号', '原片材质', '原片序号', '产品id', '产品x坐标', '产品y坐标', '产品x方向长度', '产品y方向长度');
     
     for item_code = 1:(i_total - 1)
         
@@ -167,7 +167,7 @@ elseif data_type == 2
             continue;
         end
         
-        fprintf(fileID, '%d,%s,%d,%d,%f,%f,%f,%f,%d\n', item_batch(item_code), item_material(item_code), item_bin(item_code), item_ID(item_code), item_x(item_code), item_y(item_code), item_x_length(item_code), item_y_length(item_code), item_tag(item_code));
+        fprintf(fileID, '%d,%s,%d,%d,%f,%f,%f,%f\n', item_batch(item_code), item_material(item_code), item_bin(item_code), item_ID(item_code), item_x(item_code), item_y(item_code), item_x_length(item_code), item_y_length(item_code));
     end
     
     fclose(fileID);
