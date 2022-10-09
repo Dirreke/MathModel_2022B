@@ -1,5 +1,4 @@
-function num_plates = q2_FFF_fun(data_ori,width,height,alpha,materials)
-
+function num_plates = q2_FFF_fun(data_ori, width, height, alpha, materials)
 
 % data_ori = data_pre_fun("../data/dataB/dataB1.csv");
 % height = 1220;
@@ -11,16 +10,18 @@ function num_plates = q2_FFF_fun(data_ori,width,height,alpha,materials)
 
 %     if max(alpha) == 1 && size(alpha,2) ~= 1
 
-num = size(alpha,1);
-batches = cell(num,1);
-num_plates = zeros(num,1);
+num = size(alpha, 1);
+batches = cell(num, 1);
+num_plates = zeros(num, 1);
 %% convert input type
 if ~iscell(alpha)
+    
     for k = 1:num
-        tmp_index = find(alpha(k,:) == 1);
+        tmp_index = find(alpha(k, :) == 1);
         batches(k) = {tmp_index};
     end
-else 
+    
+else
     batches = alpha;
 end
 
@@ -35,25 +36,29 @@ for k = 1:num
     
     num_plates(k) = 0;
     tmp_orders = batches{k};
+    
     if isempty(tmp_orders)
         continue
     end
+    
     tmp_items = [];
+    
     for tmp_order = tmp_orders
-        tmp_items = [tmp_items;data_ori(data_ori(:,8) == tmp_order,:)];
+        tmp_items = [tmp_items; data_ori(data_ori(:, 8) == tmp_order, :)];
     end
+    
     if special_materials
         tmp_materials = materials;
     else
-        tmp_materials = unique(tmp_items(:,9))';
+        tmp_materials = unique(tmp_items(:, 9))';
     end
+    
     for tmp_material = tmp_materials
-        data_new = tmp_items(tmp_items(:,9) == tmp_material,:);
-        tmp_bins = q1_FFF_fun(data_new,width,height);
+        data_new = tmp_items(tmp_items(:, 9) == tmp_material, :);
+        tmp_bins = q1_FFF_fun(data_new, width, height);
         num_plates(k) = num_plates(k) + length(tmp_bins);
     end
-
+    
 end
-
 
 end

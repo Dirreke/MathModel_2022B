@@ -65,7 +65,9 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \RequirePackage{listings}
 % 插入PDF
 \RequirePackage{pdfpages}
+\RequirePackage{algorithm}
 \RequirePackage{silence}
+
 %% 忽略警告
 \WarningFilter{hyperref}{Token not allowed in a PDF string}
 \WarningFilter{natbib}{Citation}
@@ -81,18 +83,21 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
   belowskip=3mm,
   showstringspaces=false,
   columns=flexible,
+  frame = shadowbox
   framerule=1pt,
   rulecolor=\color{gray!35},
   backgroundcolor=\color{gray!5},
   basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
+  numbers=left,
+  numberstyle=\tiny\color{lightgray},
   keywordstyle=\color{blue},
   commentstyle=\color{dkgreen},
   stringstyle=\color{mauve},
   breaklines=true,
   breakatwhitespace=true,
-  tabsize=3,
+  tabsize=4,
+  % framexleftmargin=5mm,
+  rulesepcolor=\color{red!20!green!20!blue!20!},
 }
 % 首行缩进
 \RequirePackage{indentfirst}

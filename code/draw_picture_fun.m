@@ -1,13 +1,20 @@
 function draw_picture_fun(input_file,content)
 
 input_file = "../result/figure_dataA/figure_A1.csv";
-if ~isfolder("../result/figuresA")
-    mkdir("../result/figuresA");
+content = "../result/figuresA/";
+
+file_info = dir(input_file);
+tmp = strfind(file_info.name,'.');
+if ~isempty(tmp)
+    tmp = tmp(end);
+    file_name = file_info.name(1:tmp-1);
+else
+    file_name = file_info.name;
 end
-if ~isfolder("../result/figuresA/figure_A1")
-    mkdir("../result/figuresA/figure_A1");
+content = content + '/' + file_name + '/';
+if ~isfolder(content)
+    mkdir(content);
 end
-content = '../result/figuresA/figure_A1/';
 
 f = fopen(input_file);
 fgetl(f);
