@@ -119,7 +119,7 @@
     \begin{cases}
         1, \quad  & Item_i \in  Stack_j \\
         0,\quad  & Item_i  \notin  Stack_j \\
-    \end{cases},\quad j=1,...,n, \quad i=j,...n  
+    \end{cases},\quad j=1,...,n, \quad i=j,...,n  \label{决策变量定义a}
 \end{equation}
 
 \begin{equation}
@@ -127,7 +127,7 @@
     \begin{cases}
         1, \quad  & Stack_j \in  Stripe_k \\
         0,\quad  & Stack_j  \notin  Stripe_k \\
-    \end{cases},\quad k=1,...,n, \quad j=1,...n
+    \end{cases},\quad k=1,...,n, \quad j=1,...,n \label{决策变量定义b}
 \end{equation}
 
 \begin{equation}
@@ -135,22 +135,22 @@
     \begin{cases}
         1, \quad  & Stripe_k \in  Bin_l \\
         0,\quad  & Stripe_k  \notin  Bin_l \\
-    \end{cases},\quad l=1,...,n, \quad k=l,...n
+    \end{cases},\quad l=1,...,n, \quad k=l,...n \label{决策变量定义r}
 \end{equation}
 
-在此变量定义下，我们可以计算堆栈k的高度$H(k)$为：
+在此变量定义下，我们可以计算堆栈$k$的高度$H(k)$为：
 \begin{equation}
     H(k)=\sum_{i=1}^{n} h_i a_{k,i}
 \end{equation}
 
 
-这样引入的模型约束是非线性的，不利于后续的求解。为了获得堆栈高度线性表达式，我们引入辅助变量$\delta_{l,i,j}$ ，它表征了产品项$i$对板材$l$中所有条带的高度有影响、并被包含于堆栈j中，其定义如下：
+这样引入的模型约束是非线性的，不利于后续的求解。为了获得堆栈高度线性表达式，我们引入辅助变量$\delta_{l,i,j}$ ，它表征了产品项$i$对板材$l$中所有条带的高度有影响、并被包含于堆栈$j$中，其定义如下：
 \begin{equation}
     \delta_{l,i,j}=  
     \begin{cases}
         1, \quad  & a_{j,i} r_{l,j}=1\\
         0, \quad  & a_{j,i} r_{l,j}=0
-    \end{cases},\quad l=1,...,n, \quad k=l,...n
+    \end{cases},\quad l=1,...,n-1, \quad i=l+1,...,n
 \end{equation}
 即，$\delta_{l,i,j} = 1$当且仅当项目i包含在堆栈$j$中，同时堆栈$j$包含在条带$j$中（则堆栈i的高度会影响条带$j$的高度），同时条带$j$在板材$l$中。
 
@@ -160,7 +160,7 @@
 \end{equation}
 
 \subsubsection{方向说明}
-为了便于后续讨论，本文规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}、图\ref{方向说明2}，与之垂直的板材原片的边的长度规定为板材原片的高度H，平行的边的长度规定为板材原片的长度D。
+为了便于后续讨论，本文规定第一阶段切割方向为x方向，即切割方向垂直于高度、平行于长度的方向，如图\ref{方向说明1}、图\ref{方向说明2}，与之垂直的板材原片的边的长度规定为板材原片的高度H，平行的边的长度规定为板材原片的长度W。
 \begin{figure}[!htbp]
     \centering
     \begin{minipage}{0.48\linewidth}
@@ -194,16 +194,100 @@
 \end{equation}
 
 
-不等式约束\label{产品项只给已使用堆栈}）确保产品项只会被分配给已使用的栈$j$。
+
+等式约束（\ref{产品项必须排}）保证每个产品项i必须被排样一次。
 \begin{equation}
-   \sum_{i=j+1}^{n}  a_{j,i} \le （n-j）a_{j,j}，\quad \forall j=1,...,n-1 \label{产品项只给已使用堆栈}
+    \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \label{产品项必须排}
 \end{equation}
 
-等式约束（19）保证了排样在同一堆栈中的产品项必须具有相同的宽度，并且任何一个堆栈中的产品项的总高度不得超过板材高度H。等式约束（20）保证每个已使用的堆栈j，被准确排样在条带j中。不等式约束（21）-（22）确保每个堆栈j的高度不会超过它所在的条带k的高度。此约束规则被拆分为“严格小于”和“小于等于”两个式子，以避免堆栈高度相同时出现歧义。等式约束（24）保证每个已使用的条带被准确打包到板材中。不等式约束（25）确保每个板材的高度大于等于所含条带的总高度。不等式约束（26）根据决策变量的定义（14）设置其值。不等式约束（27）确保没有条带被排样进未使用的板材中。
+不等式约束（\ref{产品项只给已使用堆栈}）确保产品项只会被分配给已使用的栈$j$。
+\begin{equation}
+   \sum_{i=j+1}^{n}  a_{j,i} \le (n-j)a_{j,j},\quad \forall j=1,...,n-1  \label{产品项只给已使用堆栈}
+\end{equation}
 
-（28）-（31）为变量的范围。
+等式约束(\ref{相同宽度})保证了排样在同一堆栈中的产品项必须具有相同的宽度，并且任何一个堆栈中的产品项的总高度不得超过板材高度H。
+\begin{equation}
+     a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H \label{相同宽度}
+ \end{equation}
+
+ 等式约束(\ref{堆栈精确排在条带})保证每个已使用的堆栈j，被准确排样在条带j中。
+\begin{equation}
+    \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \label{堆栈精确排在条带}
+\end{equation}
+
+不等式约束(\ref{严格小于的高度限制})-(\ref{小于等于的高度限制})确保每个堆栈 j 的高度不会超过它所在的条带 k 的高度。此约束规则被拆分为“严格小于”和“小于等于”两个式子，以避免堆栈高度相同时出现歧义。
+\begin{equation}
+    \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \label{严格小于的高度限制}
+\end{equation}
+\begin{equation}
+    \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad  \forall k=1,...,n-1, \quad \forall j=k+1,...,n \label{小于等于的高度限制}
+\end{equation}
+
+缺这里需要进一步补充描述文字
+\begin{equation}
+    \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k=1,...,n \label{宽度限制}
+\end{equation}
+
+等式约束(\ref{条带精准打包})保证每个已使用的条带被准确打包到板材中。
+\begin{equation}
+    \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k=1,...,n \label{条带精准打包}
+\end{equation}
+
+不等式约束(\ref{板材高度})确保每个板材的高度大于等于所含条带的总高度。
+\begin{equation}
+    \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \label{板材高度}
+\end{equation}
+
+不等式约束(\ref{决策变量相关})根据决策变量的定义(\ref{决策变量定义a})、定义(\ref{决策变量定义r})设置其值。
+\begin{equation}
+    a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \label{决策变量相关}
+\end{equation}
+
+不等式约束(\ref{未使用板材无条带})确保没有条带被排样进未使用的板材中。
+\begin{equation}
+    \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \label{未使用板材无条带}
+\end{equation}
+
+公式(\ref{范围a})-(\ref{范围delta})为变量的范围。
+\begin{equation}
+    a_{j,i} \in {0,1}, \quad j=1,...,n , \quad i=j,...,n \label{范围a}
+\end{equation}
+\begin{equation}
+    b_{k,j} \in {0,1}, \quad k=1,...,n , \quad j=1,...,n \label{范围b}
+\end{equation}
+\begin{equation}
+    r_{l,k} \in {0,1}, \quad l=1,...,n , \quad k=l,...,n \label{范围r}
+\end{equation}
+\begin{equation}
+    \delta_{l,i,j} \in {0,1}, \quad j=1,...,n-1 , \quad i=l+1,...,n \label{范围delta}
+\end{equation}
 
 完整的问题一的\textbf{三阶段2BP二进制整数线性规划模型}如下所示。
+\begin{equation}
+    \begin{cases}
+        min \sum_{l=1}^{n}  r_{l,l} \\
+        s.t.
+        \begin{cases}
+            \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \\
+            \sum_{i=j+1}^{n}  a_{j,i} \le (n-j)a_{j,j},\quad \forall j=1,...,n-1  \\
+            a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H\\
+            \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \\
+            \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \\
+            \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad  \forall k=1,...,n-1, \quad \forall j=k+1,...,n \\
+            \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k=1,...,n \\
+            \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k=1,...,n \\
+            \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \\
+            a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \\
+           \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \\
+            a_{j,i} \in {0,1}, \quad j=1,...,n , \quad i=j,...,n \\
+            b_{k,j} \in {0,1}, \quad k=1,...,n , \quad j=1,...,n \\
+            r_{l,k} \in {0,1}, \quad l=1,...,n , \quad k=l,...,n \\
+            \delta_{l,i,j} \in {0,1}, \quad j=1,...,n-1 , \quad i=l+1,...,n 
+        \end{cases}  \label{问题一模型}
+    \end{cases}
+\end{equation}
+
+
 
 %\subsubsection{编号规则}
 %
