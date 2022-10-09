@@ -34,13 +34,13 @@ end
 [~, index] = sort(material_data(:, 2), 'descend');
 material_data = material_data(index, :);
 material_data_order = material_data_order(index, :);
-% [~, index] = sort(material_data(:, 3));
-% material_data = material_data(index, :);
-% material_data_order = material_data_order(index, :);
-[~, index] = sort(material_data(:, 4));
-material_data = material_data(index, :);
-material_data_order = material_data_order(index, :);
 [~, index] = sort(material_data(:, 3));
 material_data = material_data(index, :);
 material_data_order = material_data_order(index, :);
+[~, index] = sort(material_data(:, 4));
+material_data = material_data(index, :);
+material_data_order = material_data_order(index, :);
+% [~, index] = sort(material_data(:, 3));
+% material_data = material_data(index, :);
+% material_data_order = material_data_order(index, :);
 
