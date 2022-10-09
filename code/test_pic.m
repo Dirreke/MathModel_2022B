@@ -12,5 +12,7 @@
 %     save_to_file_fun(2, k,results{k}, material_index);
 % end
 %%
-draw_picture_fun(2, 1);
 
+ for k = 2:5
+  draw_picture_fun(2, k);
+ end

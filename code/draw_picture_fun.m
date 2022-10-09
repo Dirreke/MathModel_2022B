@@ -43,6 +43,7 @@ fclose(f);
 number(:, 1) = string(data_ori{1}); % 批次序号
 number(:, 2) = string(data_ori{3}); % 原片序号
 number(:, 3) = string(data_ori{4}); % 产品ID
+number(:, 4) = string(data_ori{2}); % 材质
 material(:, 1) = data_ori{2}; % 原片材质
 data(:, 1) = data_ori{5}; % 产品y坐标
 data(:, 2) = data_ori{6}; % 产品x坐标
@@ -94,7 +95,7 @@ while i <= numtotal_item %产品总个??
    
     while i <= numtotal_item %产品总个??
         
-        if strcmpi(number(i- 1, 2), number(i, 2))
+        if strcmpi(number(i- 1, 1), number(i, 1)) &&strcmpi(number(i- 1, 2), number(i, 2)) && strcmpi(number(i- 1, 4), number(i, 4))
             
             if mark(i, 1) == 1
                % cmap = turbo(256);
