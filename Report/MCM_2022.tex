@@ -61,10 +61,22 @@
 
 \section{符号说明}
 {\centering
+% \begin{longtable}{cccc}
+
+% \end{longtable}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
-\begin{tabular}{cccc}
- \hline
-  \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ \hline
+
+\begin{longtable}{cccc}
+
+ \toprule
+  \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ 
+  \midrule
+  \endfirsthead
+
+  \toprule
+  \makebox[0.05\textwidth][c]{序号}  &  \makebox[0.2\textwidth][c]{符号}	&  \makebox[0.65\textwidth][c]{意义} \\ 
+  \endhead
+
   1 & $n$            & 同一数据集下的产品项总个数      \\ 
   1 & $i$            & 产品项编号（$i\le n,i \in \mathbb{N}^+$）      \\ 
   1 & $j$            & 栈编号（$j\le n,j \in \mathbb{N}^+$）      \\ 
@@ -81,7 +93,7 @@
   10 & $a_{j,i}$    & 标志$Stack_j$是否包含$Item_i$的0-1变量  	&\quad   \\  
   11 & $b_{k,j}$    & 标志$Stripe_k$是否包含$Stack_j$的0-1变量 	&\quad   \\  
   12 & $r_{l,k}$    & 标志$Bin_l$是否包含$Stripe_k$的0-1变量  	&\quad   \\  \hline
-\end{tabular}
+\end{longtable}
 }
 \newpage
 
@@ -348,18 +360,60 @@
 \section{问题二订单组批}
 
 \subsection{问题分析}
+该问题中要求订单当且仅当出现在一个批次中，即订单不可拆分，所以该问题也可简述为在问题一的基础上完成订单的组合问题。这仍然是一个NP-Hard问题，若简单沿用问题一的混合整数线性规划模型\ref{11}，引入新的变量与约束，这会使得模型求解难度进一步增大，求解时间增长，显然这并非是解决该问题合适的方法。
+
+因此，本问题将在问题一的基础上，进一步建立\textbf{两步优化模型}，内层模型求解最优排样方案，外层模型求解最优组批方案，显然这是一个带有线性约束及非线性目标函数的混合整数非线性规划问题。
 
 \subsection{模型建立}
 
+
 \subsubsection{决策变量}
 
-\subsubsection{编号规则}
+类似问题一中\ref{11}的变量定义方法，定义批次的编号为该批次所包含的最小的订单编号，则有描述各批次(Batch)、订单(Order)之间包含关系的决策变量如下：
+\begin{equation}   %\mbox{中文}
+    d_{q,p}=
+    \begin{cases}
+        1, \quad  & \text{Order}_p \in  \text{Batch}_q \\
+        0,\quad  & \text{Order}_p \notin  \text{Batch}_q \\
+    \end{cases},\quad q\le p \le m,\quad p,q \in  \mathbb{N}^+\\
+\end{equation}
+\noindent 式中，$m$为订单总数。
 
 \subsubsection{方向说明}
 
 \subsubsection{目标函数}
+该问题目标函数为总的板材利用率最高，为总原始板材使用数量最少。
 
-\subsubsection{约束条件}
+\textbf{定义}非线性函数$f_q(d_{q,1},d_{q,2},\cdots,d_{q,m})$，表示在第q批次的订单组合$(d_{q,1},d_{q,2},\cdots,d_{q,m})$利用问题一模型所求得的最佳排样方案所使用的原始板材数量。
+
+即有非线性目标函数
+\begin{equation}   
+    \mathbf{min}\quad\sum_{q=1}^{m} f_q(d_{q,1},d_{q,2},\cdots,d_{q,m}),q\le m ,q\in  \mathbb{N}^+\label{目标函数2}
+\end{equation}
+
+该目标函数中，函数$f_q$可利用问题一模型求解，函数$f_q$的优化求解问题，即为该组批优化的内层优化问题。
+
+等式约束\ref{订单必须排}保证所有的订单$p$被批次$q$包含且仅包含1次。
+
+\begin{equation}   
+    \sum_{q=1}^{p} d_{q,p}=1,\quad \forall p\le m,p \in \mathbb{N}^+ \label{订单必须排}
+\end{equation}
+
+
+不等式约束\ref{编号原则2}保证决策变量$d_{q,p}$满足其编号原则。
+
+\begin{equation}   
+\sum_{p=q}^{n} d_{q,p} \le (n-q+1)d_{q,q},\quad \forall q\le n
+\end{equation}
+
+
+\begin{equation}   
+    \sum_{p=q}^{n} d_{q,p} < \text{max\_item\_num},\quad \forall q \le max\_item\_num
+\end{equation}
+\begin{equation}   
+    \sum_{p=q}^{n} S_pd_{q,p} < max\_item\_area,\quad \forall q\le n
+\end{equation}
+
 
 \subsubsection{数学模型}
 
