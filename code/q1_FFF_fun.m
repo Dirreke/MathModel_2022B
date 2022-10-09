@@ -55,6 +55,7 @@ while ~isempty(data)
     strip.unused_width = width;
     strip.stacks = [];
     data_flags = false(size(data, 1), 1);
+    bin_used_area = 0;
     
     for k = 1:size(data, 1)
         
@@ -66,6 +67,7 @@ while ~isempty(data)
             stack.width = data(k, 4);
             stack.unused_height = 0;
             stack.items = data(k, :);
+            bin_used_area = bin_used_area + data(k,5);
             
             strip.height = data(k, 3);
             strip.unused_width = strip.unused_width - stack.width;
@@ -77,6 +79,7 @@ while ~isempty(data)
             stack.width = data(k, 4);
             stack.unused_height = strip.height - data(k, 3);
             stack.items = data(k, :);
+            bin_used_area = bin_used_area + data(k,5);
             % remove item(k)
             data_flags(data(:, 1) == data(k, 1)) = 1;
             
@@ -89,6 +92,7 @@ while ~isempty(data)
                 if data(kk, 4) == stack.width && data(kk, 3) <= stack.unused_height
                     stack.unused_height = strip.height - data(kk, 3);
                     stack.items = [stack.items; data(kk, :)];
+                    bin_used_area = bin_used_area + data(k,5);
                     % remove item(k)
                     data_flags(data(:, 1) == data(kk, 1)) = 1;
                 end
@@ -113,10 +117,13 @@ while ~isempty(data)
         bin.unused_height = height;
         bin.width = width;
         bin.strips = [];
+        bin.ratio = bin_used_area / height/width;
     else
         bin.strips = [bin.strips, strip];
         bin.unused_height = bin.unused_height - strip.height;
+        bin.ratio = bin_used_area / height/width;
     end
+     
     
 end
 
