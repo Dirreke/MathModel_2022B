@@ -14,3 +14,4 @@ Report/figures/Batch*
 data/resultA/*
 result/**/*
 **/*.mat
+Report/data*.txt
