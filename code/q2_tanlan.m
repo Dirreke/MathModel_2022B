@@ -83,10 +83,6 @@ num_plates = 0;
 for k = 1:size(orders_unique, 1)
     [material_packs,material_packs_ratio,material_packs_num_plates] = q2_FFF_fun(data, width, height, orders_unique(k));
     
-    for kk = 1:length(material_packs)
-        material_packs(kk).material_name = material_index(material_packs(kk).material_id); %% 添加material是名称
-    end
-    
     orders_now_id = orders_unique(k); %此批次对应的订单锁号
     orders_id = data_ori(data(:, 8) == orders_now_id,8)'; %此批次包含的实际订单们
     
@@ -94,6 +90,7 @@ for k = 1:size(orders_unique, 1)
     batch.material_packs = material_packs;
     batch.ratio = material_packs_ratio;
     batch.orders_id = orders_id;%该批次所含的所有订单实际id
+    batches(k) = batch;
     num_plates = num_plates + material_packs_num_plates;
     
 end
