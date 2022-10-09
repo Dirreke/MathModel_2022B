@@ -7,7 +7,7 @@ file = [
 results = cell(length(file), 1);
 ratios = zeros(length(file), 1);
 tic
-parfor k = 1:length(file)
+for k = 2:length(file)
     [data_ori, material_index] = data_pre_fun(file(k));
     
     if length(material_index) ~= 1
@@ -28,8 +28,13 @@ parfor k = 1:length(file)
         ratios(k) = ratio_1;
     end
     save_to_file_fun(1, k,results{k}, material_index(1));
-%     draw_picture_fun(1, k);
+    draw_picture_fun(1, k);
     fprintf("数据集dataA%d的最优排样策略的板材利用率为%.2f\n ",k,100*ratios(k));
 end
 toc
 
+
+%% 
+for k =1:1
+    draw_picture_fun(2, k);
+end

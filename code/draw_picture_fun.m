@@ -9,7 +9,7 @@ function draw_picture_fun(data_type, files_id)
 %%
 %   data_type = 1;
 %   files_id = 1;
- color_map = parula(256)
+ color_map = parula(256);
 if data_type == 1
     content = "../result/figuresA/";
     input_file = "../result/figure_dataA/figure_A" + files_id + ".csv";
