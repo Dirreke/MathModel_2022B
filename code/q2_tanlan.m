@@ -1,9 +1,9 @@
+function batches = q2_tanlan(data_file_path)
 %% tanlan
-
-file = ["../data/dataB/dataB1.csv", "../data/dataB/dataB2.csv", "../data/dataB/dataB3.csv", "../data/dataB/dataB4.csv", "../data/dataB/dataB5.csv"];
+% file = ["../data/dataB/dataB1.csv","../data/dataB/dataB2.csv","../data/dataB/dataB3.csv","../data/dataB/dataB4.csv","../data/dataB/dataB5.csv"];
 width = 1220;
 height = 2440;
-data_ori = data_pre_fun(file(3));
+data_ori = data_pre_fun(data_file_path);
 max_item_number = 1000;
 max_item_area = 250e6;
 data = data_ori;
@@ -83,10 +83,40 @@ end
 orders_unique = unique(data_ori(:, 8));
 orders_BP_infos = cell(size(orders_unique, 1), 1);
 batches_BP_infos = zeros(size(orders_unique, 1), 2);
+orders_bins = cell(size(orders_unique, 1), 2); %订单号，material_packs
 
 for k = 1:size(orders_unique, 1)
-    [orders_BP_infos{k}, num, ratio] = q3_FFF_fun(data_ori, width, height, orders_unique(k)); % materials num_plates ratio_all ratio_last
-    batches_BP_infos(k, :) = [num, ratio];
+    %[orders_BP_infos{k}, num, ratio] = q3_FFF_fun(data_ori,width,height,orders_unique(k));
+    [orders_BP_infos{k}, order_bins] = q3_FFF_fun(data_ori, width, height, orders_unique(k));
+    
+    for kk = 1:length(orders_bins.material_packs)
+        orders_bins.material_packs{kk}.material = material_index(orders_bins.material_packs{kk}.material_id);
+    end
+    
+    orders_bins{k, 1} = orders_unique(k);
+    orders_bins{k, 2} = order_bins;
+    batches_BP_infos{k}(:, 4) = []; % materials num_plates ratio_all
+end
+
+%此数据集所分生产批次的信息
+batches = cell(length(batches_BP_infos), 3); %批次序号，该批次所含的所有订单实际id，材质包
+
+for k = 1:size(orders_unique, 1) %对于每一个生产批次
+    batches{k, 1} = k; %批次序号
+    
+    order_now_id = orders_unique(k); %此批次对应的订单锁号
+    order_total_num = sum(data_ori(:, 8) == order_now_id); %此批次包含的实际订单数
+    order_in_data_row = data(data_ori(:, 8) == order_now_id); %此批次包含的实际订单们
+    order_id_real = [];
+    
+    for kk = 1:order_total_num
+        order_id_real = [order_id_real, data(order_in_data_row(kk), 8)]; %此订单的本真订单号
+    end
+    
+    batches{k, 2} = order_id_real; %该批次所含的所有订单实际id
+    
+    batches{k, 3} = orders_bins{k, 2}; %材质包
+    
 end
 
 % num_bins_calculate = @(x_alpha,x_material)q2_FFF_fun(data_ori,width,height,x_alpha,x_material);
@@ -98,4 +128,4 @@ end
 %         end
 %     end
 
-% end
+end
