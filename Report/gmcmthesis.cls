@@ -65,8 +65,14 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \RequirePackage{listings}
 % 插入PDF
 \RequirePackage{pdfpages}
-\RequirePackage{algorithm}
+% \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\RequirePackage{multicol}
 \RequirePackage{silence}
+% 
+\renewcommand{\algorithmcfname}{算法 }
+\SetKwInput{KwIn}{输入}  
+\SetKwInput{KwOut}{输出} 
 
 %% 忽略警告
 \WarningFilter{hyperref}{Token not allowed in a PDF string}
@@ -106,7 +112,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 % 定制列表环境
 \RequirePackage{enumitem}
 % 下划线
-\RequirePackage{ulem}
+% \RequirePackage{ulem}
 % 尺寸计算
 \RequirePackage{calc}
 \RequirePackage{titletoc,url}
