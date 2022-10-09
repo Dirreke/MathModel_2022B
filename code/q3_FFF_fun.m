@@ -1,11 +1,10 @@
-function orders_BP_info = q3_FFF_fun(data_ori,width,height,orders,materials)
+function [orders_BP_info, orders_bins] = q3_FFF_fun(data_ori,width,height,orders,materials)
 
-
-% data_ori = data_pre_fun("../data/dataB/dataB1.csv");
+% data_ori = data_pre_fun("../data/dataB/dataB2.csv");
 % height = 1220;
 % width = 2440;
-% orders = [458];
-
+% orders = [91,133];
+% nargin = 4;
 
 num = length(orders);
 orders_BP_info = zeros(num,4);% materials num_plates ratio_all ratio_last
@@ -30,10 +29,17 @@ if special_materials
 else
     tmp_materials = unique(tmp_items(:,9))';
 end
+
+orders_bins.material_packs = cell(length(tmp_materials),1);
 for k = 1:length(tmp_materials)
     tmp_material = tmp_materials(k);
     data_new = tmp_items(tmp_items(:,9) == tmp_material,:);
     tmp_bins = q1_FFF_fun(data_new,width,height);
+    
+    orders_bins.material_packs{k}.material_id = tmp_materials(k);  %材质序号
+    orders_bins.material_packs{k}.bins = tmp_bins;        %所包含的bins
+    orders_bins.material_packs{k}.items = data_new;       %此订单此材质的所有items
+    
     orders_BP_info(k,1) = tmp_material;
     orders_BP_info(k,2) = length(tmp_bins);
     orders_BP_info(k,3) = sum(data_new(:,5))/width/height/orders_BP_info(k,2);
@@ -47,7 +53,6 @@ for k = 1:length(tmp_materials)
     
     
 end
-
 
 
 end

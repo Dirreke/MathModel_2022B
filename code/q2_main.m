@@ -6,7 +6,7 @@ for k = 1:length(file)
     height = 2440;
     max_item_number = 1000;
     max_item_area = 250e6;
-    q2_tanlan()
+    batches = q2_tanlan(file(k));
 end
 
 
