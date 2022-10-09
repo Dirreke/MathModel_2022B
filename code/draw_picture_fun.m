@@ -7,9 +7,9 @@ function draw_picture_fun(data_type, files_id)
 %       FILE_ID : the File ID
 
 %%
-% data_type = 1;
-% files_id = 1;
-
+  data_type = 1;
+  files_id = 1;
+ color_map = parula(256)
 if data_type == 1
     content = "../result/figuresA/";
     input_file = "../result/figure_dataA/figure_A" + files_id + ".csv";
@@ -34,6 +34,8 @@ if ~isfolder(content)
     mkdir(content);
 end
 
+
+
 f = fopen(input_file);
 fgetl(f);
 data_ori = textscan(f, '%s %s %s %s %f %f %f %f %d', 'delimiter', ',');
@@ -52,51 +54,62 @@ numtotal_item = length(number(:, 3));
 
 i = 1;
 
-while i <= 28 %numtotal_item %产品总个??
+while i <= numtotal_item %产品总个??
     picture = 'Batch' + number(i, 1) + '-' + material(i, 1) + '-' + 'Board' + number(i, 2);
     figure('NumberTitle', 'off', 'Name', picture);
     
     hold on;
-    rectangle('Position', [0, 0, 1220, 2440], 'LineWidth', 0.5, 'EdgeColor', 'K', 'LineStyle', '-');
+    text_mark=2;
+    
     
     if mark(i, 1) == 1
-        cmap = turbo(256);
-        rand_color_F = randperm(255);
+        %cmap = turbo(256);
+        % rand_color_F = randperm(255);
+        %rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', cmap(rand_color_f, :));
+        
+        rand_color_F = randperm(256);
         rand_color_f = rand_color_F(1, 1);
-        rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', cmap(rand_color_f, :));
-        plot(data(i, 2), data(i, 1), 'K-o', 'MarkerFaceColor', 'K', 'MarkerSize', 3);
-        text(data(i, 2) + 30, data(i, 1) + 50, 'Item' + number(i, 3) + '(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' + num2str(data(i, 4)) + '*' + num2str(data(i, 3)), 'fontsize', 6, 'FontName', 'Times New Roman', 'FontAngle', 'italic');
+        rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', color_map(rand_color_f, :));
+       % plot(data(i, 2), data(i, 1), 'K-o', 'MarkerFaceColor', 'K', 'MarkerSize', 3);
+       % text(data(i, 2) + 30, data(i, 1) + 50, 'Item' + number(i, 3) + '(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' + num2str(data(i, 4)) + '*' + num2str(data(i, 3)), 'fontsize', 6, 'FontName', 'Times New Roman', 'FontAngle', 'italic');
+        text((data(i, 2)+data(i, 4)/2-40), (data(i, 1)+data(i, 3)/2-5), 1, number(i, 3),'fontsize', 9, 'FontName', 'Times New Roman');
+        str(text_mark,1) = 'Item' + number(i, 3) + ':Position(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' +':Size'+ num2str(data(i, 4)) + 'mm*' + num2str(data(i, 3))+ 'mm';
+        text_mark=text_mark+1; 
     else
-        %cmap=hsv(256);
-        %rand_color_F=randperm(255);
-        %rand_color_f=rand_color_F(1,1);
-        rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.2, 'EdgeColor', 'k', 'LineStyle', ':');
+        rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.2, 'EdgeColor', 'k', 'LineStyle', ':','FaceColor',[0.87 0.87 0.87]);
     end
     
+
     i = i + 1;
     axis([0 1220 0 2440]);
     set(gca, 'XTick', 0:0:0);
     set(gca, 'YTick', 0:0:0);
-    set(gca, 'fontsize', 9, 'FontName', 'Times New Roman');
-    set(gca, 'position', [0.05 0.1 0.9 0.81]);
-    set(gcf, 'position', [0.75 1.5 300 600]);
+    set(gca, 'fontsize', 12, 'FontName', 'Times New Roman');
+    set(gca, 'position', [0.05 0.1 0.5 0.81]);
+    set(gcf, 'position', [0.75 1.5 600 600]);
     xlabel('1220mm', 'fontsize', 9, 'FontName', 'Times New Roman');
     ylabel('2440mm', 'fontsize', 9, 'FontName', 'Times New Roman');
     title(picture);
-    
-    while i <= 28 %numtotal_item %产品总个??
+   
+    while i <= numtotal_item %产品总个??
         
-        if strcmpi(number(i - 1, 2), number(i, 2))
+        if strcmpi(number(i- 1, 2), number(i, 2))
             
             if mark(i, 1) == 1
-                cmap = turbo(256);
-                rand_color_F = randperm(255);
-                rand_color_f = rand_color_F(1, 1);
-                rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', cmap(rand_color_f, :));
-                plot(data(i, 2), data(i, 1), 'K-o', 'MarkerFaceColor', 'K', 'MarkerSize', 3);
-                text(data(i, 2) + 30, data(i, 1) + 20, 'Item' + number(i, 3) + '(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' + num2str(data(i, 4)) + 'mm*' + num2str(data(i, 3)) + 'mm', 'fontsize', 9, 'FontName', 'Times New Roman', 'FontAngle', 'italic');
+               % cmap = turbo(256);
+               % rand_color_F = randperm(255);
+               % rand_color_f = rand_color_F(1, 1);
+               % rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', cmap(rand_color_f, :));
+               rand_color_F = randperm(256);
+               rand_color_f = rand_color_F(1, 1);
+               rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.5, 'FaceColor', color_map(rand_color_f, :)); 
+              % plot(data(i, 2), data(i, 1), 'K-o', 'MarkerFaceColor', 'K', 'MarkerSize', 3);
+              % text(data(i, 2) + 30, data(i, 1) + 20, 'Item' + number(i, 3) + '(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' + num2str(data(i, 4)) + 'mm*' + num2str(data(i, 3)) + 'mm', 'fontsize', 9, 'FontName', 'Times New Roman', 'FontAngle', 'italic');
+               text((data(i, 2)+data(i, 4)/2-40), (data(i, 1)+data(i, 3)/2-5), 1, number(i, 3),'fontsize', 9, 'FontName', 'Times New Roman');
+               str(text_mark,1) = 'Item' + number(i, 3) + ':Position(' + num2str(data(i, 2)) + ',' + num2str(data(i, 1)) + ')' +':Size'+ num2str(data(i, 4)) + 'mm*' + num2str(data(i, 3))+ 'mm';
+               text_mark=text_mark+1; 
             else
-                rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.2, 'EdgeColor', 'k', 'LineStyle', ':');
+                rectangle('Position', [data(i, 2), data(i, 1), data(i, 4), data(i, 3)], 'LineWidth', 0.2, 'EdgeColor', 'k', 'LineStyle', ':','FaceColor',[0.87 0.87 0.87]);
             end
             
             i = i + 1;
@@ -106,9 +119,15 @@ while i <= 28 %numtotal_item %产品总个??
         
     end
     
+    dim =  [0.56 0.085 0.38 0.81];
+    str(1,1)='PRODUCT DATA'
+    annotation('textbox',dim,'String',str,'LineStyle','-','LineWidth',0.1,'EdgeColor','w','fontsize', 9, 'FontName', 'Times New Roman','FitBoxToText','on' ,'VerticalAlignment','bottom') ;
+    rectangle('Position', [0, 0, 1220, 2440], 'LineWidth',1, 'EdgeColor', 'K', 'LineStyle', '-');
+    
     hold off;
     %saveas(gca,content+picture,'png');
     print(content + picture, '-dpng');
-    % close(gcf);
+
+    close(gcf);
     
 end
