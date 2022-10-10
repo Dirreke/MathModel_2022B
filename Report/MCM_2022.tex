@@ -38,11 +38,11 @@
 \section{问题重述}
 \subsection{问题背景}
 
-方形件产品（也称板式类产品）是一类以板材为主要原片、经平面加工后组合装配形成的产品，如3C(计算、通讯、消费电子)、板式家具、玻璃、钣金件等。因其“多品种小批量”的个性化定制生产模式，企业通常需要进行订单组批和排样优化，降低原材料消耗，保证生产效率。
+方形件产品（也称板式类产品）是一类以板材为主要原片、经平面加工后组合装配形成的产品。因其“多品种小批量”的个性化定制生产模式，企业通常需要进行订单组批和排样优化，降低原材料消耗，保证生产效率。
 
-\textbf{订单组批}是指针对数量庞大的不同订单，将其组成若干批次,实现批量化生产。批次的定义为完成若干订单全部任务且不含任何不完整订单任务的订单集合。订单组批时，通常会将具有相同材质、交货期相近、工艺相似的订单安排在同一个生产批次。
+\textbf{排样优化}是指合理规划方形件在板材原片上的布局，最大化材料利用率，简化切割过程。切割工艺根据是否任何一次直线切割都能保证板材可分离可分为齐头切和非齐头切，齐头切又可根据是否在有限切割阶段数内切割出准确尺寸的方形件分为精确方式和非精确方式。\textbf{订单组批}是指针对数量庞大的不同订单，将其组成若干批次,实现批量化生产。批次的定义为完成若干订单全部任务且不含任何不完整订单任务的订单集合。
 
-\textbf{排样优化}是指合理规划方形件在板材原片上的布局，最大化材料利用率，简化切割过程。切割工艺根据是否任何一次直线切割都能保证板材可分离可分为齐头切和非齐头切，齐头切又可根据是否在有限切割阶段数内切割出准确尺寸的方形件分为精确方式和非精确方式。以3个阶段的切割方式为例，第1阶段切割生成模块可称为 {\rm Stripe}（条带），第2阶段切割生成模块可称为 {\rm Stack}（栈），第3阶段生成模块可称为 {\rm Item}（产品项）。
+
 
 \subsection{问题提出}
 基于上述问题背景，根据题目提供的输入参数（包括单个批次产品项总数上限和面积总和上限、原片长度和宽度）和产品项数据集（包括产品项材质、数量、长度、宽度和订单号），完成下述两个问题：
@@ -412,7 +412,32 @@
         \end{table}
 	
 	以数据集AX所求得X号板材的排样方案效果图如图X所示，其余排样方案效果图详见附录。
-	
+    \begin{figure}[!htbp]
+        \centering
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B1-Batch1-GDMY-0215S-Board1.png}
+            \caption{数据集A1（批次1板材1）}
+        \end{minipage}
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B2-Batch2-XXB-0218S-Board14.png}
+            \caption{数据集A2（批次2板材14）}
+        \end{minipage}
+    \end{figure}
+    \begin{figure}[!htbp]
+        \centering
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B3-Batch22-GDMY-0218S-Board26.png}
+            \caption{数据集A3（批次22板材26）}
+        \end{minipage}
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B4-Batch28-YMH-0218SD-Board16.png}
+            \caption{数据集A4（批次28板材16）}
+        \end{minipage}
+    \end{figure}
 \subsection{算法及效果评价}
 
 \subsubsection{复杂度指标评价}  
@@ -605,6 +630,38 @@
     \end{table}
 
     所得利用率在 76\%到80\% 之间，相比问题一较低，这主要由于同一订单的产品项必须在相同批次，而材质不同的产品项无法排样在同一块板材原件上所导致。由输出结果所得各组批的排样图分析可见，在此组批约束下，此排样结果已相对较优。各组批方案详见附录。
+
+    \begin{figure}[!htbp]
+        \centering
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B1-Batch1-GDMY-0215S-Board1.png}
+            \caption{数据集B1（批次1板材1）}
+        \end{minipage}
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B2-Batch2-XXB-0218S-Board14.png}
+            \caption{数据集B2（批次2板材14）}
+        \end{minipage}
+    \end{figure}
+    \begin{figure}[!htbp]
+        \centering
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B3-Batch22-GDMY-0218S-Board26.png}
+            \caption{数据集B3（批次22板材26）}
+        \end{minipage}
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B4-Batch28-YMH-0218SD-Board16.png}
+            \caption{数据集B4（批次28板材16）}
+        \end{minipage}
+        \begin{minipage}{0.48\linewidth}
+            \centering
+            \includegraphics[width=.9\textwidth]{B2-Batch2-XXB-0218S-Board14.png}
+            \caption{数据集B5（批次2板材14）}
+        \end{minipage}
+    \end{figure}
 
 \subsection{算法及效果评价}
 
