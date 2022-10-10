@@ -178,7 +178,7 @@
     \begin{cases}
         1, \quad  &  {\rm Item}_i \in   {\rm Stack}_j \\
         0,\quad  &  {\rm Item}_i  \notin   {\rm Stack}_j \\
-    \end{cases},\quad j=1,...,n, \quad i=j,...,n  \label{决策变量定义a}
+    \end{cases},\quad j \le n ,\quad j\le i \le n,\quad i,j \in  \mathbb{N}^+  \label{决策变量定义a}
 \end{equation}
 
 \begin{equation}
@@ -186,7 +186,7 @@
     \begin{cases}
         1, \quad  &  {\rm Stack}_j \in   {\rm Stripe}_k \\
         0,\quad  &  {\rm Stack}_j  \notin   {\rm Stripe}_k \\
-    \end{cases},\quad k=1,...,n, \quad j=1,...,n \label{决策变量定义b}
+    \end{cases},\quad k \le n ,\quad j\le i \le n,\quad k,j \in  \mathbb{N}^+ \label{决策变量定义b}
 \end{equation}
 
 \begin{equation}
@@ -194,7 +194,7 @@
     \begin{cases}
         1, \quad  &  {\rm Stripe}_k \in   {\rm Bin}_l \\
         0,\quad  &  {\rm Stripe}_k  \notin   {\rm Bin}_l \\
-    \end{cases},\quad l=1,...,n, \quad k=l,...n \label{决策变量定义r}
+    \end{cases},\quad l \le n ,\quad l \le k \le n,\quad l,k \in  \mathbb{N}^+ \label{决策变量定义r}
 \end{equation}
 
 在此变量定义下，我们可以计算栈$k$的高度$H(k)$为：
@@ -209,7 +209,7 @@
     \begin{cases}
         1, \quad  & a_{j,i} r_{l,j}=1\\
         0, \quad  & a_{j,i} r_{l,j}=0
-    \end{cases},\quad l=1,...,n-1, \quad i=l+1,...,n
+    \end{cases},\quad l \le n-1 ,\quad l+1\le i \le n,\quad l,i \in \mathbb{N}^+ 
 \end{equation}
 即，$\delta_{l,i,j} = 1$当且仅当项目i包含在栈$j$中，同时栈$j$包含在条带$j$中（则栈i的高度会影响条带$j$的高度），同时条带$j$在板材$l$中。
 
@@ -227,71 +227,71 @@
 根据前述分析，该优化问题涉及变量存在相应约束条件，每个产品项$i$在且仅在一块板材中出现：
 
 \begin{equation}
-    \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \label{产品项必须排}
+    \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i \le n,\quad i \in \mathbb{N}^+ \label{产品项必须排}
 \end{equation}
 
 
 产品项只会被分配给已使用的栈：
 
 \begin{equation}
-   \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j=1,...,n  \label{产品项只给已使用栈}
+   \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j \le n,\quad j \in \mathbb{N}^+  \label{产品项只给已使用栈}
 \end{equation}
 
 排样在同一栈中的产品项必须具有相同的宽度，并且任何一个栈中的产品项的总高度不得超过板材高度$H$：
 \begin{equation}
-     a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H \label{相同宽度}
+     a_{j,i}=0,\quad \forall j \le n-1,\quad j \in \mathbb{N}^+,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H \label{相同宽度}
  \end{equation}
 
-已使用的栈$j$在且仅在一条条带$j$中：
+已使用的栈$j$在且仅在一个条带$j$中：
 \begin{equation}
-    \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \label{栈精确排在条带}
+    \sum_{k=1}^{n}  b_{k,j} = a_{j,j}, \quad \forall j \le n,\quad j \in \mathbb{N}^+  \label{栈精确排在条带}
 \end{equation}
 
 每个栈 $j$的高度不超过所在条带 $k$ 的高度，考虑栈高度可能相同的情况，按照“严格小于”和“小于等于”两张情况予以区分：
 \begin{equation}
-    \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \label{严格小于的高度限制}
+    \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad \forall  2 \le k \le n,\quad \forall j \le k-1, \quad k,j \in \mathbb{N}^+  \label{严格小于的高度限制}
 \end{equation}
 \begin{equation}
-    \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad  \forall k=1,...,n-1, \quad \forall j=k+1,...,n \label{小于等于的高度限制}
+    \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad \forall  k \le n-1, \quad \forall k+1 \le j \le n, \quad k,j \in \mathbb{N}^+ \label{小于等于的高度限制}
 \end{equation}
 
 条带的宽度不超过箱子的宽度，且栈只会被分配给已使用的条带中：
 \begin{equation}
-    \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k=1,...,n \label{宽度限制}
+    \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k \le n, \quad k \in \mathbb{N}^+ \label{宽度限制}
 \end{equation}
 
 每个已使用的条带在且仅在一块板材中：
 \begin{equation}
-    \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k=1,...,n \label{条带精准打包}
+    \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k \le n, \quad k \in \mathbb{N}^+ \label{条带精准打包}
 \end{equation}
 
 一块板材上条带的总高度不超过板材的高度：
 \begin{equation}
-    \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \label{板材高度}
+    \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l \le n-1, \quad l \in \mathbb{N}^+\label{板材高度}
 \end{equation}
 
 根据决策变量的定义式(\ref{决策变量定义a})、式(\ref{决策变量定义r})，设置辅助变量的值：
 \begin{equation}
-    a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \label{决策变量相关}
+    a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l \le n-1,\quad \forall l+1 \le i \le n, \quad l \le j \le i-1, \quad l,i,j \in \mathbb{N}^+ \label{决策变量相关}
 \end{equation}
 
 条带只会分配给已使用的板材：
 \begin{equation}
-    \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \label{未使用板材无条带}
+    \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l \le n-1, \quad l \in \mathbb{N}^+ \label{未使用板材无条带}
 \end{equation}
 
 公式(\ref{范围a})-(\ref{范围delta})为变量的范围，所有变量均为0-1整数型变量：
 \begin{equation}
-    a_{j,i} \in \{0,1\}, \quad j=1,...,n , \quad i=j,...,n \label{范围a}
+    a_{j,i} \in \{0,1\}, \quad j \le n , \quad j \le i \le n, \quad j,i \in \mathbb{N}^+ \label{范围a}
 \end{equation}
 \begin{equation}
-    b_{k,j} \in \{0,1\}, \quad k=1,...,n , \quad j=1,...,n \label{范围b}
+    b_{k,j} \in \{0,1\}, \quad k \le n , \quad j \le n, \quad k,j \in \mathbb{N}^+ \label{范围b}
 \end{equation}
 \begin{equation}
-    r_{l,k} \in \{0,1\}, \quad l=1,...,n , \quad k=l,...,n \label{范围r}
+    r_{l,k} \in \{0,1\}, \quad l \le n , \quad k \le n, \quad l,k \in \mathbb{N}^+ \label{范围r}
 \end{equation}
 \begin{equation}
-    \delta_{l,i,j} \in \{0,1\}, \quad j=1,...,n-1 , \quad i=l+1,...,n \label{范围delta}
+    \delta_{l,i,j} \in \{0,1\}, \quad j \le n-1 , \quad l+1 \le i \le n, \quad j,i \in \mathbb{N}^+ \label{范围delta}
 \end{equation}
 
 完整的问题一的\textbf{三阶段2BP二进制整数线性规划模型}如下所示：
@@ -300,21 +300,21 @@
         \mathbf{min}  \sum_{l=1}^{n}  r_{l,l} \\
         s.t.
         \begin{cases}
-            \sum_{j=1}^{i}  a_{j,i} =1,\quad \forall i=1,...,n \\
-            \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j=1,...,n  \\
-            a_{j,i}=0, \quad \forall j=1,...,n-1,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H\\
-            \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j=1,...,n  \\
-            \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad  \forall  k=2,...,n,\quad  \forall j=1,...,k-1 \\
-            \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}), \quad  \forall k=1,...,n-1, \quad \forall j=k+1,...,n \\
-            \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k=1,...,n \\
-            \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k=1,...,n \\
-            \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l=1,...,n-1 \\
-            a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \quad \forall l=1,...,n-1,\quad \forall i=l+1,...,n,\quad j=l,...,i-1 \\
-           \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l=1,...,n-1 \\
-            a_{j,i} \in \{0,1\}, \quad j=1,...,n , \quad i=j,...,n \\
-            b_{k,j} \in \{0,1\}, \quad k=1,...,n , \quad j=1,...,n \\
-            r_{l,k} \in \{0,1\}, \quad l=1,...,n , \quad k=l,...,n \\
-            \delta_{l,i,j} \in \{0,1\}, \quad j=1,...,n-1 , \quad i=l+1,...,n 
+            \sum_{j=1}^{i}  a_{j,i} =1,\quad i \in \mathbb{N}^+ \\
+            \sum_{i=j}^{n}  a_{j,i} \le (n-j+1)a_{j,j},\quad \forall j \le n,\quad j \in \mathbb{N}^+ \\
+            a_{j,i}=0, \quad \forall j \le n-1,\quad j \in \mathbb{N}^+,\quad  \forall i>j \mid w_i \neq w_j \vee h_i+h_j>H\\
+            \sum_{k=1}^{n}  b_{k,j} =a_{j,j},\quad \forall j \le n,\quad j \in \mathbb{N}^+   \\
+            \sum_{i=j}^{n} h_ia_{j,i}<\sum_{i=k}^n h_i a_{k,i}+(H+1)(1-b_{k,j}),\quad \forall  2 \le k \le n,\quad \forall j \le k-1, \quad k,j \in \mathbb{N}^+ \\
+            \sum_{i=j}^{n} h_ia_{j,i} \le \sum_{i=k}^n h_i a_{k,i}+H(1-b_{k,j}),\quad \forall  k \le n-1, \quad \forall k+1 \le j \le n, \quad k,j \in \mathbb{N}^+ \\
+            \sum_{j=1}^{n} w_j b_{k,j} \le W b_{k,k}, \quad k \le n, \quad k \in \mathbb{N}^+ \\
+            \sum_{l=1}^{k} r_{l,k} = b_{k,k}, \quad \forall k \le n, \quad k \in \mathbb{N}^+ \\
+            \sum_{i=l}^{n} h_i r_{l,i} +\sum_{i=l+1}^{n} h_i \sum_{j=l}^{i-1} \delta_{l,i,j} \le H r_{l,l}, \quad \forall l \le n-1, \quad l \in \mathbb{N}^+ \\
+            a_{j,i}+r_{l,j}-1 \le \delta_{l,i,j} \le (a_{j,i}+r_{l,j})/2, \forall l \le n-1, \forall l+1 \le i \le n, l \le j \le i-1, l,i,j \in \mathbb{N}^+ \\
+           \sum_{k=l+1}^{n} r_{l.k} \le (n-l)r_{l,l}, \quad \forall l \le n-1, \quad l \in \mathbb{N}^+ \\
+            a_{j,i} \in \{0,1\}, \quad j \le n , \quad j \le i \le n, \quad j,i \in \mathbb{N}^+ \\
+            b_{k,j} \in \{0,1\},  \quad k \le n , \quad j \le n, \quad k,j \in \mathbb{N}^+ \\
+            r_{l,k} \in \{0,1\}, \quad l \le n , \quad l \le k \le n, \quad l,k \in \mathbb{N}^+ \\
+            \delta_{l,i,j} \in \{0,1\},  \quad j \le n-1 , \quad l+1 \le i \le n, \quad j,i \in \mathbb{N}^+
         \end{cases}  \label{问题一模型}
     \end{cases}
 \end{equation}
@@ -692,7 +692,7 @@
 	
 \subsubsection{运行时间}
 	 
-	数据集B1-B5的产品项规模在20000-30000片左右，算法求解平均耗时在20minutes左右。对于该大规模深度耦合复杂程度问题，此求解时间速度快，效果好。
+	数据集B1-B5的产品项规模在20000-30000片左右，算法求解平均耗时在20min左右。对于该大规模深度耦合复杂程度问题，此求解时间速度快，效果好。
 		
 \subsubsection{求解有效性}
 
@@ -710,7 +710,7 @@
 \section{模型评价与展望}
 \subsection{模型优点}
 \begin{itemize}
-    \item 排样优化与组批优化算法计算时间较快，排样优化求解800规模产品项仅需200ms左右，组批优化求解30000规模产品项仅需20minutes左右；
+    \item 排样优化与组批优化算法计算时间较快，排样优化求解800规模产品项仅需200ms左右，组批优化求解30000规模产品项仅需20min左右；
     \item 排样优化与组批优化算法计算效果较优，使得最小原始板材数量接近于理想值；
     \item 排样考虑了方形件的旋转问题，对产品项的宽度和高度没有绝对的大小关系限制，允许产品项以旋转或不旋转的方式排样在板材中，可行解空间更大。
 \end{itemize}
