@@ -15,3 +15,5 @@ data/resultA/*
 result/**/*
 **/*.mat
 Report/data*.txt
+result2/**
+**/tempCodeRunnerFile.py
