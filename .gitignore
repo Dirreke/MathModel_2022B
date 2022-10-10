@@ -3,6 +3,7 @@ Report/*.log
 Report/*.out
 # example/example.pdf
 Report/*.synctex.gz
+Report/*.synctex(busy)
 Report/*.bbl
 Report/*.blg
 Report/*.pdf
