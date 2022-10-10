@@ -13,6 +13,6 @@
 % end
 %%
 
- for k = 2:5
-  draw_picture_fun(2, k);
+ for k = 1:4
+  draw_picture_fun(1, k);
  end
