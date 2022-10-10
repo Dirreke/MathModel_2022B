@@ -4,7 +4,6 @@ file = [
     "../data/dataA/dataA3.csv",
     "../data/dataA/dataA4.csv"
     ];
-
 height = 2440;
 width = 1220;
 
@@ -13,7 +12,6 @@ ratios = zeros(length(file), 1);
 
 for k = 1:length(file)
     [data_ori, material_index] = data_pre_fun(file(k));
-    
     if length(material_index) ~= 1
         error("there is more than 1 material in dataA file");
     end
@@ -26,7 +24,6 @@ for k = 1:length(file)
         ratios(k) = ratio_2;
         results{k} = bins_2;
     end
-
     fprintf("数据集dataA%d的最优排样策略的板材利用率为%.2f\n ",k,100*ratios(k));
 end
 
