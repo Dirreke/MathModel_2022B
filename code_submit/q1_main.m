@@ -17,9 +17,15 @@ for k = 1:length(file)
     if length(material_index) ~= 1
         error("there is more than 1 material in dataA file");
     end
-    tic 
-    [bins,ratio] = q1_FFFD_fun(data_ori, width, height);
-    toc
+    [bins_1,ratio_1] = q1_FFFD_fun(data_ori, width, height);
+    [bins_2,ratio_2] = q1_FFFD_fun(data_ori, height, width);
+    if ratio_1 < ratio_2
+        ratios(k) = ratio_1;
+        results{k} = bins_1;
+    else
+        ratios(k) = ratio_2;
+        results{k} = bins_2;
+    end
 
     fprintf("数据集dataA%d的最优排样策略的板材利用率为%.2f\n ",k,100*ratios(k));
 end

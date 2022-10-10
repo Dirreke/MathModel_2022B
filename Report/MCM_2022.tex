@@ -396,7 +396,15 @@
 
 对于该大规模混合整数模型，还可以进一步使用启发式算法求解，由于模型规模巨大，一个良好的初值对于提高启发式算法收敛速度起着重要作用。而FFFD刚好可以给启发式算法提供良好的初值。
 
-本文在FFFD的基础上，采用遗传算法、离散二进制粒子群算法对排样优化策略进一步优化。在此问题中，将$a_{j,i}$,$b_{k,j}$,$c_{l,k}$,$\delta_{l,i,j}$串联起来，即可形成一维二进制向量，进而作为遗传算法和离散二进制粒子群算法的求解初值。对于遗传算法、离散二进制粒子群算法的其他初值，也可以在将产品项顺序$\text{Item}$随机打乱后，再通过有限首次适应(Finite First Fit)算法得到排样优化问题可行解，并形成靠近优化问题全局最优解的可行解初值，从而进一步迭代求解。
+本文在FFFD的基础上，采用遗传算法、离散二进制粒子群算法对排样优化策略进一步优化。在此问题中，将$a_{j,i}$,$b_{k,j}$,$c_{l,k}$,$\delta_{l,i,j}$串联起来，即可形成一维二进制向量，进而作为遗传算法和离散二进制粒子群算法的求解初值。对于遗传算法、离散二进制粒子群算法的其他初值，也可以在将产品项顺序$\text{Item}$随机打乱后，再通过有限首次适应(Finite First Fit)算法得到排样优化问题可行解，并形成靠近优化问题全局最优解的可行解初值。
+
+在遗传算法和离散二进制粒子群算法中，原规划问题的约束通过罚函数的方式加入到优化目标，即新的优化目标为：
+\begin{equation}
+    obj = \sum_{l=1}^{n}  r_{l,l} + k\sqrt{k}h(x), l \le n,l \in \mathbb{N}^+\label{启发式算法}
+\end{equation}
+\noindent 式中，$k$表示遗传算法或离散二进制粒子群算法当前迭代次数，$x$表示所有决策变量，$h(x)$表示在变量$x$下所谓反的约束的总和。
+
+于是，在式\ref{启发式算法}下，排样策略可以进一步进行迭代优化。
 
 \subsection{求解结果}
 
@@ -468,7 +476,9 @@
 	
 \subsubsection{运行时间}
 	 
-	数据集A1-A4的产品项规模在800片左右，FFFD算法求解平均耗时在200毫秒左右，求解效果好，运行时间快。启发式算法因其并未得到更优于FFFD的解，所以此处不再记录其运行时间。
+	数据集A1-A4的产品项规模在800片左右，FFFD算法求解平均耗时在200毫秒左右，求解效果好，运行时间快。
+    
+    启发式算法因其并未得到更优于FFFD的解，所以此处不再记录其运行时间。
 		
 
 
@@ -868,5 +878,62 @@ MATERIALS\_ORDERS : 元胞向量，该向量的每一项代表该种材质被包
 
 \lstinputlisting[language=matlab]{../code_submit/q2_materials_data_fun.m}
 
+
+\newpage
+\section{问题一离散二进制粒子群算法主程序}
+
+问题一离散二进制粒子群算法主程序，利用FFFD算法计算排样优化方案，并将其作为初值，进行粒子群迭代。
+
+\lstinputlisting[language=matlab]{../code_submit/q1_BPSO_main.m}
+
+\newpage
+\section{问题一离散二进制遗传算法主程序}
+
+问题一离散二进制遗传算法主程序，利用FFFD算法计算排样优化方案，并将其作为初值，进行遗传迭代。
+
+\lstinputlisting[language=matlab]{../code_submit/q1_ga_main.m}
+
+
+\newpage
+\section{问题一混合整数线性规划模型建立}
+
+建立问题一的混合整数新型规划模型
+
+\textbf{输入：} 
+
+DATA\_ORI : 由\ref{数据预处理及读取函数}数据预处理及读取函数读取的数据矩阵
+
+WIDTH : 原始板材宽度
+
+HIGHT : 原始板材高度
+
+\textbf{输出：} 
+
+MODEL : 混合整数新型规划模型参数
+
+\lstinputlisting[language=matlab]{../code_submit/q1_create_model_fun.m}
+
+
+
+
+
+\newpage
+\section{问题一启发式算法模型适应度计算}
+
+计算问题一启发式模型的优化目标\ref{启发式算法}适应度。
+
+\textbf{输入：} 
+
+MODEL : 混合整数规划模型信息
+
+X : 变量值
+
+K : 迭代次数
+
+\textbf{输出：} 
+
+COST : 模型在变量X，迭代次数K下的花费
+
+\lstinputlisting[language=matlab]{../code_submit/q1_cost_fun.m}
 
 \end{document} 
